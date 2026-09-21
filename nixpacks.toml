@@ -1,10 +1,17 @@
 [phases.setup]
-nixPkgs = ["python311", "ffmpeg", "which"]
+nixPkgs = ["python311", "python311Packages.pip", "ffmpeg"]
 
 [phases.install]
 cmds = [
   "npm install",
-  "pip3 install -U yt-dlp"
+  "pip3 install -U yt-dlp",
+  "which yt-dlp || echo 'yt-dlp not in PATH'",
+  "pip3 show yt-dlp"
+]
+
+[phases.build]
+cmds = [
+  "python3 -m yt_dlp --version || echo 'yt-dlp module check'"
 ]
 
 [start]
