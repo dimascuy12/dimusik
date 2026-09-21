@@ -1,17 +1,16 @@
 {
-  "name": "music-app",
+  "name": "dimusik",
   "version": "1.0.0",
-  "description": "Music Streaming App",
+  "description": "Aplikasi streaming musik Indonesia",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "axios": "^1.20.0",
-    "cors": "^2.8.6",
-    "express": "^4.22.3",
-    "express-http-proxy": "^2.1.2",
-    "https": "^1.0.0",
-    "node-fetch": "^2.6.12"
+    "axios": "^1.6.0",
+    "express": "^4.18.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
