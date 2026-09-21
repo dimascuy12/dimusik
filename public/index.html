@@ -2,269 +2,779 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 <title>dimusik</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="style.css"/>
-</head>
-<body class="dark">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:'Inter',sans-serif}
+html,body{height:100%;background:#121212;color:#fff;overflow:hidden}
 
-<!-- SPLASH -->
+/* SPLASH */
+#splash{position:fixed;inset:0;background:#121212;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:9999;transition:opacity 0.6s}
+#splash img{width:80px;height:80px;object-fit:contain}
+#splash span{font-size:34px;font-weight:800;color:#fff;letter-spacing:-1px}
+
+/* LAYOUT */
+#app{position:fixed;inset:0;display:flex;flex-direction:column;visibility:hidden}
+.page{display:none;position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden}
+.page.active{display:flex;flex-direction:column}
+
+/* TOP BAR */
+.topbar{height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid #282828;flex-shrink:0}
+.logo-row{display:flex;align-items:center;gap:8px}
+.logo-row img{width:30px;height:30px;object-fit:contain}
+.logo-row span{font-size:20px;font-weight:800;color:#e91e8c}
+.topbar-title{font-size:20px;font-weight:700}
+.topbar-actions{display:flex;gap:4px}
+.icon-btn{background:none;border:none;color:#b3b3b3;font-size:18px;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.icon-btn:active{background:#282828}
+
+/* SCROLL */
+.page-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:8px}
+.page-scroll::-webkit-scrollbar{display:none}
+
+/* HERO */
+.hero{margin:12px;border-radius:16px;background:linear-gradient(135deg,#1a0533,#2d1b69,#0d3b6b);padding:24px 20px 20px;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px}
+.hero-sub{font-size:11px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:1px}
+.hero-title{font-size:22px;font-weight:800;color:#fff;line-height:1.2}
+.hero-btn{margin-top:10px;background:#fff;color:#121212;border:none;padding:10px 20px;border-radius:24px;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+
+/* SECTIONS */
+.section{padding:0 16px;margin-bottom:20px}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.section-head h3{font-size:16px;font-weight:700;display:flex;align-items:center;gap:6px}
+.see-all{background:none;border:none;color:#b3b3b3;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px}
+
+/* GENRE */
+.genre-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.genre-row::-webkit-scrollbar{display:none}
+.gpill{flex-shrink:0;background:#282828;border:none;color:#b3b3b3;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px}
+.gpill.active{background:#e91e8c;color:#fff}
+
+/* CARDS */
+.cards-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.cards-row::-webkit-scrollbar{display:none}
+.card{flex-shrink:0;width:130px;cursor:pointer}
+.card-img{width:130px;height:130px;border-radius:10px;overflow:hidden;background:#282828;position:relative;margin-bottom:6px}
+.card-img img{width:100%;height:100%;object-fit:cover;display:block}
+.card-img-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#555;font-size:28px}
+.card-title{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}
+.card-artist{font-size:11px;color:#b3b3b3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* TRACK ROW */
+.track-list{display:flex;flex-direction:column}
+.trow{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;border-bottom:1px solid #1e1e1e}
+.trow:active{background:#1e1e1e}
+.trow-img{width:46px;height:46px;border-radius:8px;overflow:hidden;background:#282828;flex-shrink:0;position:relative}
+.trow-img img{width:100%;height:100%;object-fit:cover;display:block}
+.trow-img-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#555;font-size:18px}
+.trow-info{flex:1;min-width:0}
+.trow-title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trow-artist{font-size:12px;color:#b3b3b3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trow-menu{background:none;border:none;color:#b3b3b3;padding:8px;font-size:16px;cursor:pointer;flex-shrink:0}
+
+/* SEARCH INPUT */
+.search-bar{padding:10px 16px;border-bottom:1px solid #282828;flex-shrink:0}
+.search-inner{position:relative;display:flex;align-items:center}
+.search-inner i{position:absolute;left:12px;color:#b3b3b3;font-size:15px;pointer-events:none}
+.search-inner input{width:100%;background:#282828;border:none;color:#fff;padding:10px 16px 10px 38px;border-radius:24px;font-size:14px;outline:none}
+.search-inner input::placeholder{color:#666}
+
+/* SKELETON */
+.skel-row{display:flex;gap:12px;padding:0}
+.skel-card{flex-shrink:0;width:130px}
+.skel{background:linear-gradient(90deg,#282828 25%,#333 50%,#282828 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px}
+.skel-sq{width:130px;height:130px;border-radius:10px;margin-bottom:6px}
+.skel-line{height:11px;width:100%;margin-bottom:5px}
+.skel-line.s{width:70%}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 20px;gap:10px;color:#555;text-align:center}
+.empty i{font-size:40px}
+.empty p{font-size:15px;font-weight:500;color:#777}
+.empty small{font-size:12px}
+
+/* MINI PLAYER */
+#miniPlayer{display:none;position:relative;background:#1e1e1e;border-top:1px solid #282828;padding:10px 16px;align-items:center;gap:10px;flex-shrink:0;cursor:pointer}
+.mp-img{width:40px;height:40px;border-radius:6px;overflow:hidden;background:#282828;flex-shrink:0;position:relative}
+.mp-img img{width:100%;height:100%;object-fit:cover}
+.mp-img-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#555;font-size:16px}
+.mp-info{flex:1;min-width:0}
+.mp-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mp-artist{font-size:11px;color:#b3b3b3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mp-btns{display:flex;gap:4px;flex-shrink:0}
+.mp-btn{background:none;border:none;color:#fff;font-size:20px;padding:6px;cursor:pointer}
+.mp-prog{position:absolute;bottom:0;left:0;height:2px;background:#e91e8c;width:0;transition:width 0.5s linear}
+
+/* BOTTOM NAV */
+#bottomNav{display:flex;background:#121212;border-top:1px solid #282828;flex-shrink:0}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;color:#b3b3b3;padding:8px 0;cursor:pointer}
+.nav-btn i{font-size:20px}
+.nav-btn span{font-size:10px;font-weight:500}
+.nav-btn.active{color:#e91e8c}
+
+/* FULL PLAYER */
+#fullPlayer{position:fixed;inset:0;z-index:500;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column}
+#fullPlayer.open{transform:translateY(0)}
+#fp-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(40px) brightness(0.25);transform:scale(1.15)}
+#fp-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.55)}
+#fp-body{position:relative;z-index:1;display:flex;flex-direction:column;height:100%;padding:0 24px 32px;overflow-y:auto}
+.fp-topbar{display:flex;align-items:center;justify-content:space-between;padding-top:52px;margin-bottom:8px}
+.fp-topbar-title{font-size:12px;font-weight:600;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:1px}
+.fp-cover{width:100%;aspect-ratio:1;border-radius:16px;overflow:hidden;background:#282828;box-shadow:0 20px 60px rgba(0,0,0,0.7);flex-shrink:0;margin-bottom:24px}
+.fp-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.fp-info-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.fp-track-name{font-size:22px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;margin-right:12px}
+.fp-track-artist{font-size:14px;color:rgba(255,255,255,0.65);margin-top:3px}
+.fav-btn{font-size:24px;color:rgba(255,255,255,0.6);background:none;border:none;cursor:pointer;flex-shrink:0;padding:4px}
+.fp-seek-wrap{margin-bottom:8px}
+.fp-seekbar{width:100%;height:4px;accent-color:#e91e8c;cursor:pointer;display:block}
+.fp-times{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.5);margin-top:4px}
+.fp-controls{display:flex;align-items:center;justify-content:space-between;margin:16px 0}
+.fp-ctrl{background:none;border:none;color:rgba(255,255,255,0.75);font-size:22px;cursor:pointer;padding:8px;display:flex;align-items:center;justify-content:center}
+.fp-ctrl.active{color:#e91e8c}
+.fp-play-btn{width:64px;height:64px;border-radius:50%;background:#fff;border:none;color:#121212;font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.5)}
+.fp-actions{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.fp-vol{display:flex;align-items:center;gap:8px;flex:1;margin:0 12px;color:rgba(255,255,255,0.5);font-size:13px}
+.vol-slider{flex:1;accent-color:#e91e8c}
+.fp-act-btn{background:none;border:none;color:rgba(255,255,255,0.6);font-size:20px;cursor:pointer;padding:8px}
+
+/* BOTTOM SHEET */
+.bsheet{position:fixed;inset:0;z-index:600;pointer-events:none}
+.bsheet.open{pointer-events:all}
+.bsheet-back{position:absolute;inset:0;background:rgba(0,0,0,0.6);opacity:0;transition:opacity 0.3s}
+.bsheet.open .bsheet-back{opacity:1}
+.bsheet-panel{position:absolute;bottom:0;left:0;right:0;background:#1e1e1e;border-radius:20px 20px 0 0;padding:16px;transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);max-height:80vh;overflow-y:auto}
+.bsheet.open .bsheet-panel{transform:translateY(0)}
+.bsheet-handle{width:40px;height:4px;background:#444;border-radius:2px;margin:0 auto 16px}
+.bsheet-title{font-size:17px;font-weight:700;margin-bottom:14px}
+.bsheet-track{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #333}
+.bsheet-track img{width:48px;height:48px;border-radius:8px;object-fit:cover}
+.bsheet-btn{width:100%;background:none;border:none;color:#fff;padding:14px 8px;font-size:15px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:14px;border-radius:8px}
+.bsheet-btn:active{background:#282828}
+.bsheet-btn i{width:22px;text-align:center;color:#e91e8c;font-size:16px}
+
+/* LIGHT THEME */
+body.light{background:#f5f5f5;color:#121212}
+body.light .page{background:#f5f5f5}
+body.light .topbar{background:#fff;border-color:#e0e0e0}
+body.light .topbar-title{color:#121212}
+body.light .logo-row span{color:#e91e8c}
+body.light #miniPlayer{background:#fff;border-color:#e0e0e0}
+body.light .mp-title,.light .trow-title,.light .card-title{color:#121212}
+body.light .mp-artist,.light .trow-artist,.light .card-artist{color:#666}
+body.light #bottomNav{background:#fff;border-color:#e0e0e0}
+body.light .nav-btn{color:#666}
+body.light .gpill{background:#e0e0e0;color:#666}
+body.light .gpill.active{background:#e91e8c;color:#fff}
+body.light .trow{border-color:#eee}
+body.light .trow:active{background:#f0f0f0}
+body.light .card-img,.light .trow-img,.light .mp-img{background:#e0e0e0}
+body.light .search-inner input{background:#e0e0e0;color:#121212}
+body.light .hero{background:linear-gradient(135deg,#1a0533,#2d1b69,#0d3b6b)}
+body.light .bsheet-panel{background:#fff}
+body.light .bsheet-btn{color:#121212}
+body.light .bsheet-track{border-color:#eee}
+</style>
+</head>
+<body>
+
 <div id="splash">
-  <div class="splash-inner">
-    <img src="https://i.ibb.co.com/fGTf9vk1/1789926990240-removebg-preview.png" alt="logo"/>
-    <span>dimusik</span>
-  </div>
+  <img src="https://i.ibb.co.com/fGTf9vk1/1789926990240-removebg-preview.png" alt="logo" onerror="this.style.display='none'"/>
+  <span>dimusik</span>
 </div>
 
-<!-- APP -->
-<div id="app" style="visibility:hidden">
+<div id="app">
 
-  <!-- BERANDA PAGE -->
-  <div id="berandaPage" class="page active">
-    <div class="top-bar">
-      <div class="logo-wrap">
-        <img src="https://i.ibb.co.com/fGTf9vk1/1789926990240-removebg-preview.png" class="logo-img" alt="logo"/>
-        <span class="logo-text">dimusik</span>
+  <!-- BERANDA -->
+  <div id="pg-beranda" class="page active">
+    <div class="topbar">
+      <div class="logo-row">
+        <img src="https://i.ibb.co.com/fGTf9vk1/1789926990240-removebg-preview.png" alt="logo" onerror="this.style.display='none'"/>
+        <span>dimusik</span>
       </div>
-      <div class="top-actions">
-        <button id="themeBtn" class="icon-btn"><i id="themeIcon" class="fas fa-sun"></i></button>
-        <button id="searchIcon" class="icon-btn"><i class="fas fa-search"></i></button>
+      <div class="topbar-actions">
+        <button class="icon-btn" onclick="toggleTheme()"><i id="themeIcon" class="fas fa-sun"></i></button>
+        <button class="icon-btn" onclick="goSearch()"><i class="fas fa-search"></i></button>
       </div>
     </div>
-
-    <div class="scroll-area">
-      <!-- HERO -->
-      <div class="hero-banner">
-        <div class="hero-content">
-          <p class="hero-sub">Selamat datang</p>
-          <h2 class="hero-title">Musik Favoritmu<br/>Ada di Sini</h2>
-          <button class="hero-btn" onclick="playHero()">
-            <i class="fas fa-play"></i> Putar Sekarang
-          </button>
-        </div>
+    <div class="page-scroll">
+      <div class="hero">
+        <div class="hero-sub">Selamat datang</div>
+        <div class="hero-title">Musik Favoritmu<br/>Ada di Sini</div>
+        <button class="hero-btn" onclick="playHero()"><i class="fas fa-play"></i> Putar Sekarang</button>
       </div>
-
-      <!-- GENRE -->
-      <div class="section-wrap">
-        <h3 class="section-title">Genre</h3>
-        <div class="genre-scroll">
-          <button class="gpill active" data-genre="pop"><i class="fas fa-music"></i> Pop</button>
+      <div class="section" style="margin-top:8px">
+        <div class="section-head"><h3>Genre</h3></div>
+        <div class="genre-row">
+          <button class="gpill active" data-genre="pop indonesia"><i class="fas fa-music"></i> Pop</button>
           <button class="gpill" data-genre="dangdut"><i class="fas fa-guitar"></i> Dangdut</button>
-          <button class="gpill" data-genre="rock"><i class="fas fa-guitar"></i> Rock</button>
-          <button class="gpill" data-genre="jazz"><i class="fas fa-music"></i> Jazz</button>
-          <button class="gpill" data-genre="rnb"><i class="fas fa-headphones"></i> R&B</button>
-          <button class="gpill" data-genre="indie"><i class="fas fa-star"></i> Indie</button>
+          <button class="gpill" data-genre="rock indonesia"><i class="fas fa-guitar"></i> Rock</button>
+          <button class="gpill" data-genre="jazz indonesia"><i class="fas fa-music"></i> Jazz</button>
+          <button class="gpill" data-genre="rnb musik"><i class="fas fa-headphones"></i> R&amp;B</button>
+          <button class="gpill" data-genre="indie indonesia"><i class="fas fa-star"></i> Indie</button>
         </div>
       </div>
-
-      <!-- INDONESIA HITS -->
-      <div class="section-wrap">
-        <div class="section-header">
-          <h3 class="section-title"><i class="fas fa-flag" style="color:#e91e8c"></i> Indonesia Hits</h3>
-          <button class="see-all-btn" onclick="seeAll('indonesia')">Lihat semua <i class="fas fa-chevron-right"></i></button>
+      <div class="section">
+        <div class="section-head">
+          <h3><i class="fas fa-flag" style="color:#e91e8c"></i> Indonesia Hits</h3>
+          <button class="see-all" onclick="seeAll('indo')">Lihat semua <i class="fas fa-chevron-right"></i></button>
         </div>
-        <div id="indonesiaHits" class="cards-scroll"></div>
+        <div id="indoCards" class="cards-row"></div>
       </div>
-
-      <!-- CHART GLOBAL -->
-      <div class="section-wrap">
-        <div class="section-header">
-          <h3 class="section-title"><i class="fas fa-fire" style="color:#ff6b35"></i> Chart Global</h3>
-          <button class="see-all-btn" onclick="seeAll('chart')">Lihat semua <i class="fas fa-chevron-right"></i></button>
+      <div class="section">
+        <div class="section-head">
+          <h3><i class="fas fa-fire" style="color:#ff6b35"></i> Chart Global</h3>
+          <button class="see-all" onclick="seeAll('chart')">Lihat semua <i class="fas fa-chevron-right"></i></button>
         </div>
-        <div id="chartTracks" class="cards-scroll"></div>
+        <div id="chartCards" class="cards-row"></div>
       </div>
-
-      <!-- RECENTLY PLAYED -->
-      <div class="section-wrap">
-        <h3 class="section-title"><i class="fas fa-clock"></i> Terakhir Diputar</h3>
-        <div id="recentTracks" class="cards-scroll"></div>
+      <div class="section">
+        <div class="section-head"><h3><i class="fas fa-clock"></i> Terakhir Diputar</h3></div>
+        <div id="recentCards" class="cards-row">
+          <div class="empty" style="padding:20px"><i class="fas fa-clock"></i><p>Belum ada riwayat</p></div>
+        </div>
       </div>
-
-      <div style="height:160px"></div>
+      <div style="height:20px"></div>
     </div>
   </div>
 
-  <!-- SEARCH PAGE -->
-  <div id="searchPage" class="page">
-    <div class="top-bar">
-      <h2 class="page-title">Cari</h2>
+  <!-- CARI -->
+  <div id="pg-cari" class="page">
+    <div class="topbar"><span class="topbar-title">Cari</span></div>
+    <div class="search-bar">
+      <div class="search-inner">
+        <i class="fas fa-search"></i>
+        <input id="searchInput" type="search" placeholder="Cari lagu, artis..." autocomplete="off"/>
+      </div>
     </div>
-    <div class="search-wrap">
-      <i class="fas fa-search search-icon-input"></i>
-      <input id="searchInput" type="search" placeholder="Cari lagu, artis..." autocomplete="off"/>
-    </div>
-    <div class="scroll-area" style="top:120px">
+    <div class="page-scroll" style="padding-top:0">
       <div id="searchResults" class="track-list">
-        <div class="empty-state">
-          <i class="fas fa-search"></i>
-          <p>Cari lagu favoritmu</p>
-          <small>Ketik judul atau nama artis</small>
-        </div>
+        <div class="empty"><i class="fas fa-search"></i><p>Cari lagu favoritmu</p><small>Ketik judul atau nama artis</small></div>
       </div>
-      <div style="height:160px"></div>
     </div>
   </div>
 
-  <!-- FAVORIT PAGE -->
-  <div id="favoritPage" class="page">
-    <div class="top-bar">
-      <h2 class="page-title">Favorit</h2>
-    </div>
-    <div class="scroll-area" style="top:70px">
-      <div id="favList" class="track-list">
-        <div class="empty-state">
-          <i class="fas fa-heart"></i>
-          <p>Belum ada favorit</p>
-          <small>Tambahkan lagu ke favorit</small>
-        </div>
+  <!-- FAVORIT -->
+  <div id="pg-favorit" class="page">
+    <div class="topbar"><span class="topbar-title">Favorit</span></div>
+    <div class="page-scroll" style="padding-top:0">
+      <div id="favResults" class="track-list">
+        <div class="empty"><i class="fas fa-heart"></i><p>Belum ada favorit</p><small>Tambahkan lagu ke favorit</small></div>
       </div>
-      <div style="height:160px"></div>
     </div>
   </div>
 
-  <!-- UNDUHAN PAGE -->
-  <div id="unduhanPage" class="page">
-    <div class="top-bar">
-      <h2 class="page-title">Unduhan</h2>
-    </div>
-    <div class="scroll-area" style="top:70px">
-      <div id="dlList" class="track-list">
-        <div class="empty-state">
-          <i class="fas fa-download"></i>
-          <p>Belum ada unduhan</p>
-          <small>Unduh lagu untuk didengarkan offline</small>
-        </div>
+  <!-- UNDUHAN -->
+  <div id="pg-unduhan" class="page">
+    <div class="topbar"><span class="topbar-title">Unduhan</span></div>
+    <div class="page-scroll" style="padding-top:0">
+      <div id="dlResults" class="track-list">
+        <div class="empty"><i class="fas fa-download"></i><p>Belum ada unduhan</p><small>Unduh lagu untuk offline</small></div>
       </div>
-      <div style="height:160px"></div>
     </div>
   </div>
 
   <!-- MINI PLAYER -->
-  <div id="miniPlayer" style="display:none">
-    <div class="mp-left">
-      <div class="mp-cover-wrap">
-        <img id="mpCover" src="" alt="cover"/>
-        <div class="mp-cover-fallback"><i class="fas fa-music"></i></div>
-      </div>
-      <div class="mp-info">
-        <div id="mpTitle" class="mp-title">-</div>
-        <div id="mpArtist" class="mp-artist">-</div>
-      </div>
+  <div id="miniPlayer" onclick="openFP()">
+    <div class="mp-img">
+      <img id="mpImg" src="" alt=""/>
+      <div class="mp-img-icon"><i class="fas fa-music"></i></div>
     </div>
-    <div class="mp-controls">
-      <button id="mpPlay" class="mp-btn"><i class="fas fa-play"></i></button>
-      <button id="mpNext" class="mp-btn"><i class="fas fa-forward-step"></i></button>
+    <div class="mp-info">
+      <div id="mpTitle" class="mp-title">-</div>
+      <div id="mpArtist" class="mp-artist">-</div>
     </div>
-    <div id="mpSeekbar" class="mp-seekbar-fill"></div>
+    <div class="mp-btns">
+      <button class="mp-btn" id="mpPlay" onclick="event.stopPropagation();togglePlay()"><i class="fas fa-play"></i></button>
+      <button class="mp-btn" onclick="event.stopPropagation();nextTrack()"><i class="fas fa-forward-step"></i></button>
+    </div>
+    <div class="mp-prog" id="mpProg"></div>
   </div>
 
   <!-- BOTTOM NAV -->
-  <nav id="bottomNav">
-    <button id="nav-beranda" class="nav-btn active">
+  <div id="bottomNav">
+    <button class="nav-btn active" id="nb-beranda" onclick="goTo('beranda')">
       <i class="fas fa-house"></i><span>Beranda</span>
     </button>
-    <button id="nav-cari" class="nav-btn">
+    <button class="nav-btn" id="nb-cari" onclick="goSearch()">
       <i class="fas fa-search"></i><span>Cari</span>
     </button>
-    <button id="nav-favorit" class="nav-btn">
+    <button class="nav-btn" id="nb-favorit" onclick="goTo('favorit');renderFavs()">
       <i class="fas fa-heart"></i><span>Favorit</span>
     </button>
-    <button id="nav-unduhan" class="nav-btn">
+    <button class="nav-btn" id="nb-unduhan" onclick="goTo('unduhan');renderDls()">
       <i class="fas fa-download"></i><span>Unduhan</span>
     </button>
-  </nav>
-
-  <!-- FULL PLAYER -->
-  <div id="fullPlayer">
-    <div id="fpBg" class="fp-bg"></div>
-    <div class="fp-overlay"></div>
-    <div class="fp-content">
-      <div class="fp-topbar">
-        <button id="fpClose" class="icon-btn"><i class="fas fa-chevron-down"></i></button>
-        <span class="fp-now-playing">Sedang Diputar</span>
-        <button id="fpQueue" class="icon-btn"><i class="fas fa-list"></i></button>
-      </div>
-      <div class="fp-cover-wrap">
-        <img id="fpCover" src="" alt="cover"/>
-      </div>
-      <div class="fp-info">
-        <div class="fp-title-row">
-          <div>
-            <div id="fpTitle" class="fp-title">Pilih lagu</div>
-            <div id="fpArtist" class="fp-artist">-</div>
-          </div>
-          <button id="fpFav" class="icon-btn fav-btn"><i class="far fa-heart"></i></button>
-        </div>
-      </div>
-      <div class="fp-seekbar-wrap">
-        <input id="fpSeekbar" type="range" min="0" max="100" value="0" class="seekbar"/>
-        <div class="fp-times">
-          <span id="fpCurrentTime">0:00</span>
-          <span id="fpDuration">0:00</span>
-        </div>
-      </div>
-      <div class="fp-controls">
-        <button id="fpShuffle" class="icon-btn ctrl-btn"><i class="fas fa-shuffle"></i></button>
-        <button id="fpPrev" class="icon-btn ctrl-btn"><i class="fas fa-backward-step"></i></button>
-        <button id="fpPlay" class="icon-btn play-main-btn"><i class="fas fa-play"></i></button>
-        <button id="fpNext" class="icon-btn ctrl-btn"><i class="fas fa-forward-step"></i></button>
-        <button id="fpRepeat" class="icon-btn ctrl-btn"><i class="fas fa-repeat"></i></button>
-      </div>
-      <div class="fp-actions">
-        <button id="fpDownload" class="icon-btn action-btn"><i class="fas fa-download"></i></button>
-        <div class="fp-volume-wrap">
-          <i class="fas fa-volume-low"></i>
-          <input id="fpVolume" type="range" min="0" max="1" step="0.01" value="1" class="volume-slider"/>
-          <i class="fas fa-volume-high"></i>
-        </div>
-        <button id="fpShare" class="icon-btn action-btn"><i class="fas fa-share-alt"></i></button>
-      </div>
-    </div>
   </div>
 
-  <!-- QUEUE SHEET -->
-  <div id="queueSheet" class="bottom-sheet">
-    <div class="sheet-backdrop" onclick="closeQueue()"></div>
-    <div class="sheet-panel">
-      <div class="sheet-handle"></div>
-      <h3 class="sheet-title">Antrian</h3>
-      <div id="queueList" class="track-list" style="max-height:60vh;overflow-y:auto"></div>
+</div><!-- #app -->
+
+<!-- FULL PLAYER -->
+<div id="fullPlayer">
+  <div id="fp-bg"></div>
+  <div id="fp-overlay"></div>
+  <div id="fp-body">
+    <div class="fp-topbar">
+      <button class="icon-btn" style="color:#fff" onclick="closeFP()"><i class="fas fa-chevron-down"></i></button>
+      <span class="fp-topbar-title">Sedang Diputar</span>
+      <button class="icon-btn" style="color:#fff" onclick="openQueue()"><i class="fas fa-list"></i></button>
+    </div>
+    <div class="fp-cover"><img id="fpImg" src="" alt="cover"/></div>
+    <div class="fp-info-row">
+      <div style="flex:1;min-width:0">
+        <div id="fpTitle" class="fp-track-name">Pilih lagu</div>
+        <div id="fpArtist" class="fp-track-artist">-</div>
+      </div>
+      <button id="fpFav" class="fav-btn" onclick="toggleFav()"><i class="far fa-heart"></i></button>
+    </div>
+    <div class="fp-seek-wrap">
+      <input id="fpSeek" type="range" class="fp-seekbar" min="0" max="100" value="0" oninput="seekTo(this.value)"/>
+      <div class="fp-times"><span id="fpCur">0:00</span><span id="fpDur">0:00</span></div>
+    </div>
+    <div class="fp-controls">
+      <button id="fpShuffle" class="fp-ctrl" onclick="toggleShuffle()"><i class="fas fa-shuffle"></i></button>
+      <button class="fp-ctrl" onclick="prevTrack()"><i class="fas fa-backward-step"></i></button>
+      <button id="fpPlayBtn" class="fp-play-btn" onclick="togglePlay()"><i class="fas fa-play"></i></button>
+      <button class="fp-ctrl" onclick="nextTrack()"><i class="fas fa-forward-step"></i></button>
+      <button id="fpRepeat" class="fp-ctrl" onclick="toggleRepeat()"><i class="fas fa-repeat"></i></button>
+    </div>
+    <div class="fp-actions">
+      <button class="fp-act-btn" onclick="dlTrack()"><i class="fas fa-download"></i></button>
+      <div class="fp-vol">
+        <i class="fas fa-volume-low"></i>
+        <input type="range" class="vol-slider" id="volSlider" min="0" max="1" step="0.02" value="1" oninput="setVol(this.value)"/>
+        <i class="fas fa-volume-high"></i>
+      </div>
+      <button class="fp-act-btn" onclick="shareTrack()"><i class="fas fa-share-alt"></i></button>
     </div>
   </div>
+</div>
 
-  <!-- TRACK MENU SHEET -->
-  <div id="trackMenuSheet" class="bottom-sheet">
-    <div class="sheet-backdrop" onclick="closeTrackMenu()"></div>
-    <div class="sheet-panel">
-      <div class="sheet-handle"></div>
-      <div id="trackMenuContent"></div>
-    </div>
+<!-- QUEUE SHEET -->
+<div id="queueSheet" class="bsheet">
+  <div class="bsheet-back" onclick="closeQueue()"></div>
+  <div class="bsheet-panel">
+    <div class="bsheet-handle"></div>
+    <div class="bsheet-title">Antrian</div>
+    <div id="queueList" class="track-list"></div>
   </div>
+</div>
 
-</div><!-- end #app -->
+<!-- TRACK MENU SHEET -->
+<div id="menuSheet" class="bsheet">
+  <div class="bsheet-back" onclick="closeMenu()"></div>
+  <div class="bsheet-panel">
+    <div class="bsheet-handle"></div>
+    <div id="menuContent"></div>
+  </div>
+</div>
 
-<script src="app.js"></script>
 <script>
-// Splash
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    const splash = document.getElementById('splash');
-    const app = document.getElementById('app');
-    if (splash) {
-      splash.style.opacity = '0';
-      splash.style.transition = 'opacity 0.65s ease';
-      setTimeout(() => {
-        splash.style.display = 'none';
-        if (app) app.style.visibility = 'visible';
-      }, 650);
-    } else {
-      if (app) app.style.visibility = 'visible';
-    }
-  }, 2800);
+// ── STATE
+const S={
+  track:null,queue:[],qi:-1,playing:false,
+  repeat:'none',shuffle:false,
+  favs:JSON.parse(localStorage.getItem('favs')||'[]'),
+  dls:JSON.parse(localStorage.getItem('dls')||'[]'),
+  recent:JSON.parse(localStorage.getItem('recent')||'[]'),
+  pool:[],transitioning:false,failStreak:0,
+  indoCache:null,chartCache:null,
+  theme:localStorage.getItem('theme')||'dark',
+  vol:parseFloat(localStorage.getItem('vol')||'1')
+};
+
+// ── AUDIO
+const AUD=new Audio();
+AUD.volume=S.vol;
+
+// ── HELPERS
+const $=id=>document.getElementById(id);
+const fmt=s=>{if(!s||isNaN(s))return'0:00';return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0')};
+function norm(t){
+  return{
+    id:t.id,
+    title:t.title||'Unknown',
+    artist:typeof t.artist==='object'?(t.artist.name||'Unknown'):(t.artist||'Unknown'),
+    album:typeof t.album==='object'?(t.album.title||''):(t.album||''),
+    cover:(typeof t.album==='object'?t.album.cover_big:null)||t.cover||t.cover_big||'',
+    duration:t.duration||0
+  };
+}
+function addPool(tracks){
+  const ids=new Set(S.pool.map(x=>x.id));
+  tracks.forEach(t=>{const n=norm(t);if(!ids.has(n.id)){S.pool.push(n);ids.add(n.id);}});
+}
+function toast(msg){
+  let el=$('_toast');
+  if(!el){el=document.createElement('div');el.id='_toast';
+    el.style.cssText='position:fixed;bottom:150px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;max-width:80vw;text-align:center';
+    document.body.appendChild(el);}
+  el.textContent=msg;el.style.opacity='1';
+  clearTimeout(el._t);el._t=setTimeout(()=>el.style.opacity='0',2500);
+}
+
+// ── THEME
+function applyTheme(){
+  document.body.classList.toggle('light',S.theme==='light');
+  const ic=$('themeIcon');
+  if(ic)ic.className=S.theme==='light'?'fas fa-moon':'fas fa-sun';
+}
+function toggleTheme(){
+  S.theme=S.theme==='dark'?'light':'dark';
+  localStorage.setItem('theme',S.theme);applyTheme();
+}
+applyTheme();
+
+// ── NAV
+function goTo(pg){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const p=$('pg-'+pg);if(p)p.classList.add('active');
+  const b=$('nb-'+pg);if(b)b.classList.add('active');
+}
+function goSearch(){
+  goTo('cari');
+  setTimeout(()=>{const si=$('searchInput');if(si)si.focus();},100);
+}
+
+// ── SKELETON CARDS
+function skelCards(id,n=5){
+  const el=$(id);if(!el)return;
+  el.innerHTML=Array(n).fill(`<div class="skel-card"><div class="skel skel-sq"></div><div class="skel skel-line"></div><div class="skel skel-line s"></div></div>`).join('');
+}
+
+// ── RENDER CARDS (horizontal)
+function renderCards(id,tracks){
+  const el=$(id);if(!el)return;
+  const list=tracks.map(norm);
+  addPool(list);
+  if(!list.length){el.innerHTML='<div class="empty" style="padding:20px"><i class="fas fa-music"></i><p>Tidak ada lagu</p></div>';return;}
+  el.innerHTML=list.map(t=>`
+    <div class="card" onclick='playT(${JSON.stringify(JSON.stringify(t))})'>
+      <div class="card-img">
+        ${t.cover?`<img src="${t.cover}" loading="lazy" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>`:''}
+        <div class="card-img-icon" style="${t.cover?'display:none':''}"><i class="fas fa-music"></i></div>
+      </div>
+      <div class="card-title">${t.title}</div>
+      <div class="card-artist">${t.artist}</div>
+    </div>`).join('');
+}
+
+// ── RENDER ROWS (vertical)
+function renderRows(id,tracks){
+  const el=$(id);if(!el)return;
+  const list=tracks.map(norm);
+  addPool(list);
+  if(!list.length){el.innerHTML='<div class="empty"><i class="fas fa-music"></i><p>Tidak ada lagu</p></div>';return;}
+  el.innerHTML=list.map((t,i)=>`
+    <div class="trow" onclick='playT(${JSON.stringify(JSON.stringify(t))})'>
+      <div class="trow-img">
+        ${t.cover?`<img src="${t.cover}" loading="lazy" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>`:''}
+        <div class="trow-img-icon" style="${t.cover?'display:none':''}"><i class="fas fa-music"></i></div>
+      </div>
+      <div class="trow-info">
+        <div class="trow-title">${t.title}</div>
+        <div class="trow-artist">${t.artist}</div>
+      </div>
+      <button class="trow-menu" onclick='event.stopPropagation();openMenu(${JSON.stringify(JSON.stringify(t))})'><i class="fas fa-ellipsis-vertical"></i></button>
+    </div>`).join('');
+}
+
+// ── PLAY
+function playT(tj){
+  const t=typeof tj==='string'?JSON.parse(tj):tj;
+  _play(norm(t));
+}
+function _play(t){
+  S.track=t;S.transitioning=false;S.failStreak=0;
+  // recently played
+  S.recent=S.recent.filter(x=>x.id!==t.id);
+  S.recent.unshift(t);if(S.recent.length>30)S.recent.pop();
+  localStorage.setItem('recent',JSON.stringify(S.recent));
+  renderRecent();
+  // UI
+  updateFPUI(t);updateMP(t);
+  // stream
+  AUD.src=`/api/stream?title=${encodeURIComponent(t.title)}&artist=${encodeURIComponent(t.artist)}`;
+  AUD.load();
+  AUD.play().catch(e=>{console.error(e);toast('❌ Gagal memutar');});
+}
+
+function updateFPUI(t){
+  const cover=t.cover||'';
+  $('fp-bg').style.backgroundImage=cover?`url('${cover}')`:'';
+  $('fpImg').src=cover;
+  $('fpImg').onerror=()=>{$('fpImg').style.display='none';};
+  $('fpTitle').textContent=t.title;
+  $('fpArtist').textContent=t.artist;
+  const fav=S.favs.some(f=>f.id===t.id);
+  $('fpFav').innerHTML=`<i class="fa${fav?'s':'r'} fa-heart"></i>`;
+  $('fpFav').style.color=fav?'#e91e8c':'rgba(255,255,255,0.6)';
+}
+function updateMP(t){
+  $('miniPlayer').style.display='flex';
+  $('mpImg').src=t.cover||'';
+  $('mpImg').onerror=()=>{$('mpImg').style.display='none';};
+  $('mpTitle').textContent=t.title;
+  $('mpArtist').textContent=t.artist;
+  updatePlayUI();
+}
+function updatePlayUI(){
+  const playing=!AUD.paused;
+  const icon=playing?'fa-pause':'fa-play';
+  $('mpPlay').innerHTML=`<i class="fas ${icon}"></i>`;
+  $('fpPlayBtn').innerHTML=`<i class="fas ${icon}"></i>`;
+}
+
+// ── AUDIO EVENTS
+AUD.addEventListener('play',updatePlayUI);
+AUD.addEventListener('pause',updatePlayUI);
+AUD.addEventListener('timeupdate',()=>{
+  if(!AUD.duration)return;
+  const pct=(AUD.currentTime/AUD.duration)*100;
+  $('fpSeek').value=pct;
+  $('fpCur').textContent=fmt(AUD.currentTime);
+  $('fpDur').textContent=fmt(AUD.duration);
+  $('mpProg').style.width=pct+'%';
+});
+AUD.addEventListener('ended',()=>{
+  if(S.repeat==='one'){AUD.currentTime=0;AUD.play();return;}
+  nextTrack();
+});
+AUD.addEventListener('error',()=>{
+  if(S.transitioning)return;
+  S.failStreak++;
+  if(S.failStreak>=4){toast('❌ Terlalu banyak error');S.failStreak=0;return;}
+  toast('⚠️ Error, coba lagu lain...');
+  setTimeout(()=>nextTrack(),1500);
+});
+
+// ── CONTROLS
+function togglePlay(){
+  if(!S.track)return;
+  AUD.paused?AUD.play().catch(()=>{}):AUD.pause();
+}
+function nextTrack(){
+  if(S.transitioning)return;
+  S.transitioning=true;setTimeout(()=>S.transitioning=false,3000);
+  if(S.repeat==='all'&&S.queue.length){S.qi=(S.qi+1)%S.queue.length;_play(S.queue[S.qi]);return;}
+  if(S.queue.length&&S.qi<S.queue.length-1){S.qi++;_play(S.queue[S.qi]);return;}
+  playRandom();
+}
+function prevTrack(){
+  if(AUD.currentTime>3){AUD.currentTime=0;return;}
+  if(S.queue.length&&S.qi>0){S.qi--;_play(S.queue[S.qi]);return;}
+  AUD.currentTime=0;
+}
+function playRandom(){
+  const pool=S.pool.filter(t=>!S.track||t.id!==S.track.id);
+  if(!pool.length){toast('Tidak ada lagu lain');S.transitioning=false;return;}
+  _play(pool[Math.floor(Math.random()*pool.length)]);
+}
+function seekTo(v){if(AUD.duration)AUD.currentTime=(v/100)*AUD.duration;}
+function setVol(v){S.vol=parseFloat(v);AUD.volume=S.vol;localStorage.setItem('vol',v);}
+function toggleShuffle(){
+  S.shuffle=!S.shuffle;
+  $('fpShuffle').classList.toggle('active',S.shuffle);
+  toast(S.shuffle?'🔀 Acak aktif':'🔀 Acak nonaktif');
+}
+function toggleRepeat(){
+  const m=['none','all','one'];
+  S.repeat=m[(m.indexOf(S.repeat)+1)%m.length];
+  const btn=$('fpRepeat');
+  btn.classList.toggle('active',S.repeat!=='none');
+  btn.innerHTML=S.repeat==='one'?'<i class="fas fa-repeat-1"></i>':'<i class="fas fa-repeat"></i>';
+  toast({none:'Ulangi nonaktif',all:'Ulangi semua',one:'Ulangi satu'}[S.repeat]);
+}
+function playHero(){
+  if(S.pool.length)playRandom();
+  else toast('⏳ Memuat lagu...');
+}
+
+// ── FULL PLAYER
+function openFP(){$('fullPlayer').classList.add('open');}
+function closeFP(){$('fullPlayer').classList.remove('open');}
+
+// ── FAV
+function toggleFav(tj){
+  const t=tj?(typeof tj==='string'?JSON.parse(tj):tj):S.track;
+  if(!t)return;
+  const nt=norm(t);
+  const idx=S.favs.findIndex(f=>f.id===nt.id);
+  if(idx>=0){S.favs.splice(idx,1);toast('💔 Dihapus dari favorit');}
+  else{S.favs.unshift(nt);toast('❤️ Ditambah ke favorit');}
+  localStorage.setItem('favs',JSON.stringify(S.favs));
+  if(S.track&&S.track.id===nt.id)updateFPUI(S.track);
+  renderFavs();
+}
+function renderFavs(){
+  if(S.favs.length)renderRows('favResults',S.favs);
+  else $('favResults').innerHTML='<div class="empty"><i class="fas fa-heart"></i><p>Belum ada favorit</p><small>Tambahkan lagu ke favorit</small></div>';
+}
+
+// ── DOWNLOAD
+function dlTrack(tj){
+  const t=tj?(typeof tj==='string'?JSON.parse(tj):tj):S.track;
+  if(!t)return;
+  const nt=norm(t);
+  toast('⬇️ Mengunduh '+nt.title+'...');
+  const a=document.createElement('a');
+  a.href=`/api/download?title=${encodeURIComponent(nt.title)}&artist=${encodeURIComponent(nt.artist)}`;
+  a.download=`${nt.artist} - ${nt.title}.mp3`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  if(!S.dls.find(d=>d.id===nt.id)){S.dls.unshift(nt);localStorage.setItem('dls',JSON.stringify(S.dls));}
+  renderDls();
+}
+function renderDls(){
+  if(S.dls.length)renderRows('dlResults',S.dls);
+  else $('dlResults').innerHTML='<div class="empty"><i class="fas fa-download"></i><p>Belum ada unduhan</p><small>Unduh lagu untuk offline</small></div>';
+}
+function renderRecent(){
+  if(S.recent.length)renderCards('recentCards',S.recent.slice(0,10));
+  else $('recentCards').innerHTML='<div class="empty" style="padding:20px"><i class="fas fa-clock"></i><p>Belum ada riwayat</p></div>';
+}
+
+// ── SHARE
+function shareTrack(){
+  if(!S.track)return;
+  const txt=`🎵 "${S.track.title}" - ${S.track.artist} | dimusik`;
+  if(navigator.share)navigator.share({title:S.track.title,text:txt,url:location.href});
+  else navigator.clipboard.writeText(txt).then(()=>toast('📋 Disalin!'));
+}
+
+// ── QUEUE
+function addQueue(tj){
+  const t=typeof tj==='string'?JSON.parse(tj):tj;
+  S.queue.push(norm(t));toast('➕ Ditambah ke antrian');renderQueue();
+}
+function renderQueue(){
+  const el=$('queueList');if(!el)return;
+  if(!S.queue.length){el.innerHTML='<div class="empty"><i class="fas fa-list"></i><p>Antrian kosong</p></div>';return;}
+  el.innerHTML=S.queue.map((t,i)=>`
+    <div class="trow ${i===S.qi?'active':''}">
+      <div class="trow-img">
+        ${t.cover?`<img src="${t.cover}" onerror="this.style.display='none'"/>`:''}
+        <div class="trow-img-icon" style="${t.cover?'display:none':''}"><i class="fas fa-music"></i></div>
+      </div>
+      <div class="trow-info"><div class="trow-title">${t.title}</div><div class="trow-artist">${t.artist}</div></div>
+      <button class="trow-menu" onclick="S.queue.splice(${i},1);renderQueue()"><i class="fas fa-times"></i></button>
+    </div>`).join('');
+}
+function openQueue(){$('queueSheet').classList.add('open');renderQueue();}
+function closeQueue(){$('queueSheet').classList.remove('open');}
+
+// ── TRACK MENU
+function openMenu(tj){
+  const t=typeof tj==='string'?JSON.parse(tj):tj;
+  const nt=norm(t);
+  const fav=S.favs.some(f=>f.id===nt.id);
+  $('menuContent').innerHTML=`
+    <div class="bsheet-track">
+      ${nt.cover?`<img src="${nt.cover}" onerror="this.style.display='none'"/>`:''}
+      <div><div style="font-weight:600">${nt.title}</div><div style="font-size:12px;color:#b3b3b3">${nt.artist}</div></div>
+    </div>
+    <button class="bsheet-btn" onclick='playT(${JSON.stringify(JSON.stringify(nt))});closeMenu()'><i class="fas fa-play"></i>Putar Sekarang</button>
+    <button class="bsheet-btn" onclick='addQueue(${JSON.stringify(JSON.stringify(nt))});closeMenu()'><i class="fas fa-list"></i>Tambah ke Antrian</button>
+    <button class="bsheet-btn" onclick='toggleFav(${JSON.stringify(JSON.stringify(nt))});closeMenu()'><i class="fa${fav?'s':'r'} fa-heart"></i>${fav?'Hapus dari Favorit':'Tambah ke Favorit'}</button>
+    <button class="bsheet-btn" onclick='dlTrack(${JSON.stringify(JSON.stringify(nt))});closeMenu()'><i class="fas fa-download"></i>Unduh</button>`;
+  $('menuSheet').classList.add('open');
+}
+function closeMenu(){$('menuSheet').classList.remove('open');}
+
+// ── SEARCH
+let stimer=null;
+$('searchInput').addEventListener('input',e=>{
+  clearTimeout(stimer);
+  const q=e.target.value.trim();
+  if(q.length<2)return;
+  stimer=setTimeout(()=>doSearch(q),500);
+});
+$('searchInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){clearTimeout(stimer);doSearch($('searchInput').value.trim());}
+});
+async function doSearch(q){
+  if(!q)return;
+  $('searchResults').innerHTML=`<div class="empty"><i class="fas fa-spinner fa-spin"></i><p>Mencari...</p></div>`;
+  try{
+    const r=await fetch(`/api/search?q=${encodeURIComponent(q+' music')}&limit=30`);
+    const d=await r.json();
+    const tracks=(d.data||[]).filter(t=>t.duration>60&&!t.title.toLowerCase().includes('podcast')&&!t.title.toLowerCase().includes('episode'));
+    renderRows('searchResults',tracks);
+    if(!tracks.length)$('searchResults').innerHTML='<div class="empty"><i class="fas fa-search"></i><p>Tidak ditemukan</p><small>Coba kata kunci lain</small></div>';
+  }catch(e){$('searchResults').innerHTML='<div class="empty"><i class="fas fa-wifi"></i><p>Koneksi error</p></div>';}
+}
+
+// ── GENRE
+document.querySelectorAll('.gpill').forEach(btn=>{
+  btn.addEventListener('click',async()=>{
+    document.querySelectorAll('.gpill').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    goSearch();
+    $('searchResults').innerHTML=`<div class="empty"><i class="fas fa-spinner fa-spin"></i><p>Memuat...</p></div>`;
+    try{
+      const r=await fetch(`/api/search?q=${encodeURIComponent(btn.dataset.genre)}&limit=25`);
+      const d=await r.json();
+      const tracks=(d.data||[]).filter(t=>t.duration>60&&!t.title.toLowerCase().includes('podcast'));
+      renderRows('searchResults',tracks);
+      if(!tracks.length)$('searchResults').innerHTML='<div class="empty"><i class="fas fa-music"></i><p>Tidak ada lagu</p></div>';
+    }catch(e){toast('❌ Gagal memuat genre');}
+  });
+});
+
+// ── SEE ALL
+function seeAll(sec){
+  goSearch();
+  if(sec==='indo'&&S.indoCache)renderRows('searchResults',S.indoCache);
+  else if(sec==='chart'&&S.chartCache)renderRows('searchResults',S.chartCache);
+}
+
+// ── INDONESIA HITS
+const ARTISTS=['Raim Laode','Tulus','Bernadya','Rizky Febian','Raisa','Tiara Andini','Nadin Amizah','Pamungkas','Mahalini','Judika','Afgan','Isyana Sarasvati','Lyodra','Yura Yunita','Hindia','Fourtwnty','Reality Club','Danilla','Ardhito Pramono','Nadhif Basalamah'];
+
+async function loadIndo(){
+  skelCards('indoCards');
+  try{
+    const picked=[...ARTISTS].sort(()=>Math.random()-0.5).slice(0,6);
+    const res=await Promise.all(picked.map(a=>
+      fetch(`/api/search?q=${encodeURIComponent(a)}&limit=4`)
+        .then(r=>r.json())
+        .then(d=>(d.data||[]).filter(t=>{
+          const an=typeof t.artist==='object'?t.artist.name:t.artist;
+          const fn=a.split(' ')[0].toLowerCase();
+          return (an||'').toLowerCase().includes(fn)&&t.duration>60&&!t.title.toLowerCase().includes('podcast');
+        }))
+        .catch(()=>[])
+    ));
+    const tracks=res.flat().slice(0,20);
+    if(tracks.length){S.indoCache=tracks.map(norm);renderCards('indoCards',tracks);}
+    else $('indoCards').innerHTML='<div class="empty" style="padding:20px"><i class="fas fa-music"></i><p>Gagal memuat</p></div>';
+  }catch(e){$('indoCards').innerHTML='<div class="empty" style="padding:20px"><i class="fas fa-wifi"></i><p>Error koneksi</p></div>';}
+}
+
+async function loadChart(){
+  skelCards('chartCards');
+  try{
+    const r=await fetch('/api/chart?limit=20');
+    const d=await r.json();
+    const tracks=(d.data||[]).filter(t=>t.duration>60);
+    if(tracks.length){S.chartCache=tracks.map(norm);renderCards('chartCards',tracks);}
+    else $('chartCards').innerHTML='<div class="empty" style="padding:20px"><i class="fas fa-fire"></i><p>Gagal memuat</p></div>';
+  }catch(e){$('chartCards').innerHTML='<div class="empty" style="padding:20px"><i class="fas fa-wifi"></i><p>Error koneksi</p></div>';}
+}
+
+// ── SPLASH & INIT
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    const sp=$('splash');
+    sp.style.opacity='0';
+    setTimeout(()=>{sp.style.display='none';$('app').style.visibility='visible';},650);
+  },2800);
+  renderRecent();
+  loadIndo();
+  loadChart();
 });
 </script>
 </body>
