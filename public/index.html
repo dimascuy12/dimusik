@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>dimusik</title>
+<link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="splash.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<!-- ░░ SPLASH SCREEN ░░ -->
+<div id="splash">
+  <div class="splash-vinyl"></div>
+  <div class="splash-logo-wrap">
+    <div class="splash-glow"></div>
+    <img src="https://i.ibb.co.com/fGTf9vk1/1789926990240-removebg-preview.png" class="splash-logo" alt="dimusik"/>
+  </div>
+  <p class="splash-name">
+    <span class="sn-di">di</span><span class="sn-musik">musik</span>
+  </p>
+  <p class="splash-tagline">Musik Indonesia &amp; Dunia</p>
+  <div class="splash-dots">
+    <div class="splash-dot"></div>
+    <div class="splash-dot"></div>
+    <div class="splash-dot"></div>
+  </div>
+  <div class="splash-bar-wrap">
+    <div class="splash-bar-fill"></div>
+  </div>
+  <p class="splash-version">v1.0.0</p>
+</div>
+
+<!-- ░░ APP ░░ -->
+<div id="app" style="visibility:hidden">
+
+  <!-- ░░ PAGE: HOME ░░ -->
+  <div class="page active" id="pg-home">
+    <div class="topbar">
+      <div class="topbar-left">
+        <img src="https://i.ibb.co.com/fGTf9vk1/1789926990240-removebg-preview.png" class="logo-img" alt="Logo"/>
+        <span class="logo-wordmark">dimusik</span>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" id="themeBtn"><i class="fa-solid fa-sun"></i></button>
+        <button class="icon-btn" id="searchTopBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+    </div>
+
+    <div class="page-scroll">
+      <!-- GREETING -->
+      <div class="greeting-bar">
+        <div>
+          <p class="greeting-time" id="greetTime">Selamat datang</p>
+          <p class="greeting-sub">Apa yang mau kamu dengerin hari ini?</p>
+        </div>
+        <button class="notif-btn"><i class="fa-solid fa-bell"></i></button>
+      </div>
+
+      <!-- HERO BANNER -->
+      <div class="hero-banner">
+        <div class="hero-blob b1"></div>
+        <div class="hero-blob b2"></div>
+        <div class="hero-blob b3"></div>
+        <div class="hero-content">
+          <p class="hero-tag"><i class="fa-solid fa-flag"></i> Indonesia</p>
+          <h1 class="hero-title">Dengerin<br/>Semuanya.</h1>
+          <p class="hero-sub">Jutaan lagu gratis tanpa batas</p>
+          <button class="hero-play-btn" id="heroPlayBtn">
+            <i class="fa-solid fa-play"></i>
+            <span>Putar Sekarang</span>
+          </button>
+        </div>
+        <div class="hero-disc" id="heroDisc">
+          <div class="disc-ring r1"></div>
+          <div class="disc-ring r2"></div>
+          <div class="disc-circle">
+            <div class="disc-label">
+              <img src="https://i.ibb.co.com/fGTf9vk1/1789926990240-removebg-preview.png" alt=""/>
+            </div>
+            <div class="disc-hole"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GENRE PILLS -->
+      <div class="section-head"><span>Genre</span></div>
+      <div class="genre-scroll">
+        <button class="gpill active" data-genre="pop"><i class="fa-solid fa-music"></i> Pop</button>
+        <button class="gpill" data-genre="dangdut"><i class="fa-solid fa-drum"></i> Dangdut</button>
+        <button class="gpill" data-genre="rock"><i class="fa-solid fa-guitar"></i> Rock</button>
+        <button class="gpill" data-genre="jazz"><i class="fa-solid fa-music"></i> Jazz</button>
+        <button class="gpill" data-genre="rnb"><i class="fa-solid fa-microphone"></i> R&amp;B</button>
+        <button class="gpill" data-genre="hiphop"><i class="fa-solid fa-headphones"></i> Hip-Hop</button>
+        <button class="gpill" data-genre="acoustic"><i class="fa-solid fa-record-vinyl"></i> Akustik</button>
+        <button class="gpill" data-genre="kpop"><i class="fa-solid fa-star"></i> K-Pop</button>
+        <button class="gpill" data-genre="viral"><i class="fa-solid fa-fire"></i> Viral</button>
+      </div>
+
+      <!-- INDONESIA HITS -->
+      <div class="section-head">
+        <span><i class="fa-solid fa-flag" style="color:var(--red)"></i> Indonesia Hits</span>
+        <button class="see-all" data-section="indonesia">Lihat semua <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="hscroll" id="rowIndonesia"></div>
+
+      <!-- CHART GLOBAL -->
+      <div class="section-head">
+        <span><i class="fa-solid fa-fire" style="color:orange"></i> Chart Global</span>
+        <button class="see-all" data-section="chart">Lihat semua <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="hscroll" id="rowChart"></div>
+
+      <!-- RECENTLY PLAYED -->
+      <div id="recentSection" style="display:none">
+        <div class="section-head">
+          <span><i class="fa-solid fa-clock-rotate-left" style="color:var(--accent)"></i> Terakhir Diputar</span>
+        </div>
+        <div class="hscroll" id="rowRecent"></div>
+      </div>
+
+      <div style="height:160px"></div>
+    </div>
+  </div>
+
+  <!-- ░░ PAGE: SEARCH ░░ -->
+  <div class="page" id="pg-search">
+    <div class="topbar">
+      <span class="page-title">Cari Musik</span>
+    </div>
+    <div class="page-scroll">
+      <div class="search-box-wrap">
+        <i class="fa-solid fa-magnifying-glass sbox-icon"></i>
+        <input type="text" id="searchInput" class="search-box" placeholder="Artis, lagu, album..."/>
+        <button class="sbox-clear hidden" id="searchClear"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="section-head" style="padding-top:8px"><span>Artis Indonesia</span></div>
+      <div class="chip-row">
+        <button class="chip" onclick="doSearch('Raisa')">Raisa</button>
+        <button class="chip" onclick="doSearch('Tulus')">Tulus</button>
+        <button class="chip" onclick="doSearch('Bernadya')">Bernadya</button>
+        <button class="chip" onclick="doSearch('Rizky Febian')">Rizky Febian</button>
+        <button class="chip" onclick="doSearch('Nadin Amizah')">Nadin Amizah</button>
+        <button class="chip" onclick="doSearch('Tiara Andini')">Tiara Andini</button>
+        <button class="chip" onclick="doSearch('Judika')">Judika</button>
+        <button class="chip" onclick="doSearch('Afgan')">Afgan</button>
+        <button class="chip" onclick="doSearch('Isyana Sarasvati')">Isyana</button>
+        <button class="chip" onclick="doSearch('Pamungkas')">Pamungkas</button>
+        <button class="chip" onclick="doSearch('Mahalini')">Mahalini</button>
+        <button class="chip" onclick="doSearch('Lyodra')">Lyodra</button>
+        <button class="chip" onclick="doSearch('Raim Laode')">Raim Laode</button>
+        <button class="chip" onclick="doSearch('Hindia')">Hindia</button>
+      </div>
+      <div id="searchResults" class="track-list"></div>
+      <div style="height:160px"></div>
+    </div>
+  </div>
+
+  <!-- ░░ PAGE: FAVORIT ░░ -->
+  <div class="page" id="pg-fav">
+    <div class="topbar">
+      <span class="page-title">Favorit Saya</span>
+    </div>
+    <div class="page-scroll">
+      <div id="favList" class="track-list"></div>
+      <div style="height:160px"></div>
+    </div>
+  </div>
+
+  <!-- ░░ PAGE: UNDUHAN ░░ -->
+  <div class="page" id="pg-dl">
+    <div class="topbar">
+      <span class="page-title">Unduhan</span>
+    </div>
+    <div class="page-scroll">
+      <div id="dlList" class="track-list"></div>
+      <div style="height:160px"></div>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<!-- ░░ MINI PLAYER ░░ -->
+<div class="miniplayer hidden" id="miniPlayer" style="visibility:hidden">
+  <div class="mp-prog"><div class="mp-prog-fill" id="mpFill"></div></div>
+  <div class="mp-inner">
+    <img class="mp-cover" id="mpCover" src="" alt=""/>
+    <div class="mp-info">
+      <p class="mp-title" id="mpTitle">—</p>
+      <p class="mp-artist" id="mpArtist">—</p>
+    </div>
+    <div class="mp-btns">
+      <button class="mp-btn" onclick="prevTrack()"><i class="fa-solid fa-backward-step"></i></button>
+      <button class="mp-btn mp-play" id="mpPlay" onclick="togglePlay()">
+        <i class="fa-solid fa-play" id="mpPlayIcon"></i>
+      </button>
+      <button class="mp-btn" onclick="nextTrack()"><i class="fa-solid fa-forward-step"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- ░░ FULL PLAYER ░░ -->
+<div class="fullplayer hidden" id="fullPlayer">
+  <div class="fp-bg" id="fpBg"></div>
+  <div class="fp-overlay"></div>
+  <div class="fp-content">
+
+    <!-- Top bar -->
+    <div class="fp-topbar">
+      <button class="fp-icon-btn" onclick="closePlayer()">
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      <div class="fp-topbar-center">
+        <p class="fp-label">Sedang Diputar</p>
+      </div>
+      <button class="fp-icon-btn" onclick="showQueue()">
+        <i class="fa-solid fa-list"></i>
+      </button>
+    </div>
+
+    <!-- Cover -->
+    <div class="fp-cover-wrap">
+      <div class="fp-cover-shadow"></div>
+      <img class="fp-cover" id="fpCover" src="" alt=""/>
+    </div>
+
+    <!-- Info + Fav -->
+    <div class="fp-info-row">
+      <div class="fp-info">
+        <p class="fp-title" id="fpTitle">—</p>
+        <p class="fp-artist" id="fpArtist">—</p>
+      </div>
+      <button class="fp-fav" id="fpFav" onclick="toggleFav()">
+        <i class="fa-regular fa-heart" id="fpFavIcon"></i>
+      </button>
+    </div>
+
+    <!-- Seekbar -->
+    <div class="fp-seek">
+      <span class="fp-time" id="fpCur">0:00</span>
+      <div class="seek-track">
+        <div class="seek-fill" id="seekFill"></div>
+        <input type="range" class="seekbar" id="seekBar" value="0" min="0" max="100" step="0.1"/>
+      </div>
+      <span class="fp-time" id="fpDur">0:00</span>
+    </div>
+
+    <!-- Controls -->
+    <div class="fp-controls">
+      <button class="fp-ctrl fp-ctrl-sm" id="btnShuffle" onclick="toggleShuffle()">
+        <i class="fa-solid fa-shuffle"></i>
+      </button>
+      <button class="fp-ctrl" onclick="prevTrack()">
+        <i class="fa-solid fa-backward-step"></i>
+      </button>
+      <button class="fp-ctrl fp-playbtn" id="fpPlay" onclick="togglePlay()">
+        <i class="fa-solid fa-play" id="fpPlayIcon"></i>
+      </button>
+      <button class="fp-ctrl" onclick="nextTrack()">
+        <i class="fa-solid fa-forward-step"></i>
+      </button>
+      <button class="fp-ctrl fp-ctrl-sm" id="btnRepeat" onclick="toggleRepeat()">
+        <i class="fa-solid fa-repeat"></i>
+      </button>
+    </div>
+
+    <!-- Volume -->
+    <div class="fp-vol">
+      <i class="fa-solid fa-volume-low" style="font-size:14px;color:rgba(255,255,255,0.5)"></i>
+      <div class="seek-track">
+        <div class="seek-fill" id="volFill" style="width:100%"></div>
+        <input type="range" class="seekbar" id="volBar" value="100" min="0" max="100"/>
+      </div>
+      <i class="fa-solid fa-volume-high" style="font-size:14px;color:rgba(255,255,255,0.5)"></i>
+    </div>
+
+    <!-- Actions -->
+    <div class="fp-actions">
+      <button class="fp-act-btn" onclick="downloadCurrent()">
+        <i class="fa-solid fa-download"></i> Unduh
+      </button>
+      <button class="fp-act-btn" onclick="shareCurrent()">
+        <i class="fa-solid fa-share-nodes"></i> Bagikan
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ░░ QUEUE SHEET ░░ -->
+<div class="sheet-overlay hidden" id="qOverlay" onclick="hideQueue()"></div>
+<div class="bottom-sheet hidden" id="qSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <span>Antrean Lagu</span>
+    <button onclick="hideQueue()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="track-list" id="qList" style="max-height:55vh;overflow-y:auto;padding-bottom:20px"></div>
+</div>
+
+<!-- ░░ BOTTOM NAV ░░ -->
+<nav class="bottomnav" id="bottomNav" style="visibility:hidden">
+  <button class="bnav-btn active" data-pg="home">
+    <i class="fa-solid fa-house bnav-icon"></i>
+    <span class="bnav-label">Beranda</span>
+  </button>
+  <button class="bnav-btn" data-pg="search">
+    <i class="fa-solid fa-magnifying-glass bnav-icon"></i>
+    <span class="bnav-label">Cari</span>
+  </button>
+  <button class="bnav-btn" data-pg="fav">
+    <i class="fa-solid fa-heart bnav-icon"></i>
+    <span class="bnav-label">Favorit</span>
+  </button>
+  <button class="bnav-btn" data-pg="dl">
+    <i class="fa-solid fa-download bnav-icon"></i>
+    <span class="bnav-label">Unduhan</span>
+  </button>
+</nav>
+
+<!-- TOAST -->
+<div class="toast hidden" id="toast"></div>
+
+<audio id="audio" preload="none"></audio>
+
+<script src="splash.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

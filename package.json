@@ -1,0 +1,17 @@
+{
+  "name": "music-app",
+  "version": "1.0.0",
+  "description": "Music Streaming App",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^1.20.0",
+    "cors": "^2.8.6",
+    "express": "^4.22.3",
+    "express-http-proxy": "^2.1.2",
+    "https": "^1.0.0",
+    "node-fetch": "^2.6.12"
+  }
+}
