@@ -4,18 +4,24 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ─── Install & detect yt-dlp ───────────────────────────────────────────────
+console.log(`🔧 PORT env = ${process.env.PORT}`);
+console.log(`🔧 Using PORT = ${PORT}`);
+
 let YTDLP_CMD = null;
 
 function tryInstall() {
-  const cmds = ['pip3 install -U yt-dlp', 'pip install -U yt-dlp', 'python3 -m pip install -U yt-dlp --break-system-packages'];
+  const cmds = [
+    'pip3 install -U yt-dlp',
+    'pip install -U yt-dlp',
+    'python3 -m pip install -U yt-dlp --break-system-packages'
+  ];
   for (const cmd of cmds) {
     try {
       console.log(`⏳ Trying: ${cmd}`);
       execSync(cmd, { stdio: 'pipe', timeout: 120000 });
       console.log(`✅ yt-dlp installed via pip`);
       return true;
-    } catch (e) { /* continue */ }
+    } catch (e) { continue; }
   }
   return false;
 }
@@ -27,17 +33,17 @@ function detectYtdlp() {
     '/usr/bin/yt-dlp',
     `${process.env.HOME}/.local/bin/yt-dlp`,
     '/app/.local/bin/yt-dlp',
-    '/app/node_modules/youtube-dl-exec/bin/yt-dlp'
   ];
   for (const p of paths) {
     try {
       execSync(`"${p}" --version`, { stdio: 'pipe', timeout: 10000 });
+      console.log(`✅ yt-dlp binary: ${p}`);
       return p;
-    } catch (e) { /* continue */ }
+    } catch (e) { continue; }
   }
-  // try python module
   try {
-    execSync('python3 -m yt_dlp --version', { stdio: 'pipe', timeout: 10000 });
+    const v = execSync('python3 -m yt_dlp --version', { stdio: 'pipe', timeout: 10000 }).toString().trim();
+    console.log(`✅ yt-dlp via python3 module: ${v}`);
     return 'python3::module';
   } catch (e) {}
   try {
@@ -50,14 +56,22 @@ function detectYtdlp() {
 tryInstall();
 YTDLP_CMD = detectYtdlp();
 
-if (YTDLP_CMD) {
-  console.log(`✅ yt-dlp: ${YTDLP_CMD}`);
+if (!YTDLP_CMD) {
+  console.warn('⚠️  yt-dlp tidak ditemukan!');
 } else {
-  console.warn('⚠️  yt-dlp not found!');
+  console.log(`📦 yt-dlp: ${YTDLP_CMD}`);
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────
-function getYtdlpVersion() {
+function spawnYtdlp(args) {
+  if (!YTDLP_CMD) throw new Error('yt-dlp tidak tersedia');
+  if (YTDLP_CMD.includes('::module')) {
+    const prog = YTDLP_CMD.split('::')[0];
+    return spawn(prog, ['-m', 'yt_dlp', ...args]);
+  }
+  return spawn(YTDLP_CMD, args);
+}
+
+function getVersion() {
   try {
     if (!YTDLP_CMD) return 'not found';
     if (YTDLP_CMD.includes('::module')) {
@@ -68,39 +82,24 @@ function getYtdlpVersion() {
   } catch (e) { return 'error'; }
 }
 
-function spawnYtdlp(args) {
-  if (!YTDLP_CMD) throw new Error('yt-dlp not available');
-  if (YTDLP_CMD.includes('::module')) {
-    const prog = YTDLP_CMD.split('::')[0];
-    return spawn(prog, ['-m', 'yt_dlp', ...args]);
-  }
-  return spawn(YTDLP_CMD, args);
-}
-
-// ─── Middleware ────────────────────────────────────────────────────────────
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ─── API Routes ───────────────────────────────────────────────────────────
-
-// TEST endpoint
 app.get('/api/test', (req, res) => {
-  const version = getYtdlpVersion();
   res.json({
     status: 'ok',
     ytdlp: YTDLP_CMD || 'not found',
-    version: version,
+    version: getVersion(),
     node: process.version,
-    uptime: Math.floor(process.uptime()) + 's',
-    port: PORT
+    port: PORT,
+    uptime: Math.floor(process.uptime()) + 's'
   });
 });
 
-// SEARCH via Deezer
 app.get('/api/search', async (req, res) => {
   try {
     const { q, limit = 20 } = req.query;
-    if (!q) return res.status(400).json({ error: 'Query required' });
+    if (!q) return res.status(400).json({ error: 'Query wajib diisi' });
     const axios = require('axios');
     const resp = await axios.get(`https://api.deezer.com/search?q=${encodeURIComponent(q)}&limit=${limit}`);
     res.json(resp.data);
@@ -109,7 +108,6 @@ app.get('/api/search', async (req, res) => {
   }
 });
 
-// CHART via Deezer
 app.get('/api/chart', async (req, res) => {
   try {
     const { limit = 50 } = req.query;
@@ -121,11 +119,10 @@ app.get('/api/chart', async (req, res) => {
   }
 });
 
-// STREAM audio
 app.get('/api/stream', (req, res) => {
   const { title, artist } = req.query;
-  if (!title) return res.status(400).json({ error: 'title required' });
-  if (!YTDLP_CMD) return res.status(503).json({ error: 'yt-dlp not available' });
+  if (!title) return res.status(400).json({ error: 'title wajib diisi' });
+  if (!YTDLP_CMD) return res.status(503).json({ error: 'yt-dlp tidak tersedia' });
 
   const query = `ytsearch1:${title}${artist ? ' ' + artist : ''} audio`;
   const args = [
@@ -148,48 +145,29 @@ app.get('/api/stream', (req, res) => {
   res.setHeader('X-Accel-Buffering', 'no');
 
   let proc;
-  try {
-    proc = spawnYtdlp(args);
-  } catch (e) {
-    return res.status(503).json({ error: e.message });
-  }
+  try { proc = spawnYtdlp(args); }
+  catch (e) { return res.status(503).json({ error: e.message }); }
 
   proc.stdout.pipe(res);
-
   proc.stderr.on('data', (d) => {
     const msg = d.toString();
-    if (!msg.includes('[download]') && !msg.includes('Deleting')) {
-      console.error('yt-dlp stderr:', msg.trim());
-    }
+    if (!msg.includes('[download]')) console.error('yt-dlp:', msg.trim());
   });
-
-  proc.on('close', (code) => {
-    if (code !== 0 && code !== null) {
-      console.error(`yt-dlp exited with code ${code}`);
-    }
-    if (!res.writableEnded) res.end();
-  });
-
+  proc.on('close', () => { if (!res.writableEnded) res.end(); });
   proc.on('error', (err) => {
-    console.error('yt-dlp spawn error:', err);
     if (!res.headersSent) res.status(500).json({ error: err.message });
     else if (!res.writableEnded) res.end();
   });
-
-  req.on('close', () => {
-    if (proc && !proc.killed) proc.kill('SIGKILL');
-  });
+  req.on('close', () => { if (proc && !proc.killed) proc.kill('SIGKILL'); });
 });
 
-// DOWNLOAD audio
 app.get('/api/download', (req, res) => {
   const { title, artist } = req.query;
-  if (!title) return res.status(400).json({ error: 'title required' });
-  if (!YTDLP_CMD) return res.status(503).json({ error: 'yt-dlp not available' });
+  if (!title) return res.status(400).json({ error: 'title wajib diisi' });
+  if (!YTDLP_CMD) return res.status(503).json({ error: 'yt-dlp tidak tersedia' });
 
   const query = `ytsearch1:${title}${artist ? ' ' + artist : ''} audio`;
   const filename = `${artist ? artist + ' - ' : ''}${title}.mp3`.replace(/[/\\?%*:|"<>]/g, '_');
-
   const args = [
     '--no-playlist',
     '--format', 'bestaudio/best',
@@ -208,35 +186,26 @@ app.get('/api/download', (req, res) => {
   res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
 
   let proc;
-  try {
-    proc = spawnYtdlp(args);
-  } catch (e) {
-    return res.status(503).json({ error: e.message });
-  }
+  try { proc = spawnYtdlp(args); }
+  catch (e) { return res.status(503).json({ error: e.message }); }
 
   proc.stdout.pipe(res);
-
   proc.stderr.on('data', (d) => {
     const msg = d.toString();
     if (!msg.includes('[download]')) console.error('yt-dlp:', msg.trim());
   });
-
   proc.on('close', () => { if (!res.writableEnded) res.end(); });
   proc.on('error', (err) => {
     if (!res.headersSent) res.status(500).json({ error: err.message });
     else if (!res.writableEnded) res.end();
   });
-
   req.on('close', () => { if (proc && !proc.killed) proc.kill('SIGKILL'); });
 });
 
-// ─── Catch-all → index.html ───────────────────────────────────────────────
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// ─── Start ────────────────────────────────────────────────────────────────
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🎵 dimusik running at http://localhost:${PORT}`);
-  console.log(`📦 yt-dlp: ${YTDLP_CMD || 'NOT FOUND'}`);
 });
