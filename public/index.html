@@ -5,16 +5,17 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 <title>dimusik</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
+
 <div id="splash">
   <div class="splash-logo">
     <img src="https://i.ibb.co.com/fGTf9vk1/1789926990240-removebg-preview.png" alt="dimusik" onerror="this.style.display='none'"/>
   </div>
   <div class="splash-name">dimusik</div>
-  <div class="splash-tagline">Musik Indonesia & Dunia</div>
+  <div class="splash-sub">Musik Indonesia &amp; Dunia</div>
 </div>
 
 <div id="app">
@@ -28,43 +29,37 @@
           <b>dimusik</b>
         </div>
         <div class="topbar-right">
-          <button class="icon-btn" onclick="toggleTheme()" title="Ganti tema"><i id="themeIcon" class="fas fa-sun"></i></button>
-          <button class="icon-btn" onclick="goSearch()" title="Cari"><i class="fas fa-search"></i></button>
+          <button class="icon-btn" onclick="toggleTheme()"><i id="themeIcon" class="fas fa-sun"></i></button>
+          <button class="icon-btn" onclick="goSearch()"><i class="fas fa-search"></i></button>
         </div>
       </div>
       <div class="scroll-area">
-        <div class="hero" id="heroSection">
-          <div class="hero-content">
-            <div class="hero-greeting" id="heroGreeting">Selamat pagi</div>
-            <div class="hero-title">Musik Favoritmu<br/>Ada di Sini 🎵</div>
-            <div class="hero-actions">
-              <button class="hero-btn-primary" onclick="playHero()"><i class="fas fa-play"></i> Putar Sekarang</button>
-              <button class="hero-btn-secondary" onclick="playIndoRandom()"><i class="fas fa-flag"></i> Indo Hits</button>
-            </div>
+        <div class="hero">
+          <div class="hero-greeting" id="heroGreeting">Selamat datang</div>
+          <div class="hero-title">Musik Favoritmu<br/>Ada di Sini</div>
+          <div class="hero-btns">
+            <button class="hero-btn-primary" onclick="playHero()"><i class="fas fa-play"></i> Putar Sekarang</button>
+            <button class="hero-btn-secondary" onclick="playIndoRandom()"><i class="fas fa-flag"></i> Indo Hits</button>
           </div>
         </div>
 
-        <!-- QUICK ACCESS -->
-        <div class="sec" style="margin-top:8px">
+        <div class="sec">
           <div class="quick-grid" id="quickGrid"></div>
         </div>
 
-        <!-- GENRE -->
         <div class="sec">
           <div class="sec-head"><h3><i class="fas fa-sliders"></i> Genre</h3></div>
           <div class="gpills">
             <button class="gpill active" data-genre="pop indonesia"><i class="fas fa-music"></i> Pop</button>
             <button class="gpill" data-genre="dangdut terbaru"><i class="fas fa-compact-disc"></i> Dangdut</button>
             <button class="gpill" data-genre="rock indonesia"><i class="fas fa-guitar"></i> Rock</button>
-            <button class="gpill" data-genre="jazz indonesia"><i class="fas fa-saxophone"></i> Jazz</button>
+            <button class="gpill" data-genre="jazz indonesia"><i class="fas fa-music"></i> Jazz</button>
             <button class="gpill" data-genre="rnb soul"><i class="fas fa-headphones"></i> R&amp;B</button>
             <button class="gpill" data-genre="indie indonesia"><i class="fas fa-star"></i> Indie</button>
-            <button class="gpill" data-genre="hip hop indonesia"><i class="fas fa-microphone"></i> Hip-Hop</button>
-            <button class="gpill" data-genre="acoustic indonesia"><i class="fas fa-guitar"></i> Akustik</button>
+            <button class="gpill" data-genre="hiphop indonesia"><i class="fas fa-microphone"></i> Hip-Hop</button>
           </div>
         </div>
 
-        <!-- INDO HITS -->
         <div class="sec">
           <div class="sec-head">
             <h3><i class="fas fa-flag" style="color:#e91e8c"></i> Indonesia Hits</h3>
@@ -73,7 +68,6 @@
           <div id="indoCards" class="cards-row"></div>
         </div>
 
-        <!-- CHART -->
         <div class="sec">
           <div class="sec-head">
             <h3><i class="fas fa-fire" style="color:#ff6b35"></i> Chart Global</h3>
@@ -82,24 +76,22 @@
           <div id="chartCards" class="cards-row"></div>
         </div>
 
-        <!-- MOOD -->
         <div class="sec">
           <div class="sec-head"><h3><i class="fas fa-heart-pulse" style="color:#9b59b6"></i> Mood</h3></div>
           <div class="mood-grid">
-            <button class="mood-btn" onclick="playMood('santai senang')" style="background:linear-gradient(135deg,#667eea,#764ba2)"><i class="fas fa-smile"></i><span>Santai</span></button>
-            <button class="mood-btn" onclick="playMood('sedih melankolis')" style="background:linear-gradient(135deg,#4facfe,#00f2fe)"><i class="fas fa-cloud-rain"></i><span>Sedih</span></button>
-            <button class="mood-btn" onclick="playMood('semangat energik')" style="background:linear-gradient(135deg,#f093fb,#f5576c)"><i class="fas fa-bolt"></i><span>Semangat</span></button>
-            <button class="mood-btn" onclick="playMood('romantis cinta')" style="background:linear-gradient(135deg,#fd746c,#ff9068)"><i class="fas fa-heart"></i><span>Romantis</span></button>
+            <button class="mood-btn" onclick="playMood('santai tenang')" style="background:linear-gradient(135deg,#667eea,#764ba2)"><i class="fas fa-smile"></i><span>Santai</span></button>
+            <button class="mood-btn" onclick="playMood('sedih melankolis indonesia')" style="background:linear-gradient(135deg,#4facfe,#00f2fe)"><i class="fas fa-cloud-rain"></i><span>Sedih</span></button>
+            <button class="mood-btn" onclick="playMood('semangat energi upbeat')" style="background:linear-gradient(135deg,#f093fb,#f5576c)"><i class="fas fa-bolt"></i><span>Semangat</span></button>
+            <button class="mood-btn" onclick="playMood('romantis cinta indonesia')" style="background:linear-gradient(135deg,#fd746c,#ff9068)"><i class="fas fa-heart"></i><span>Romantis</span></button>
           </div>
         </div>
 
-        <!-- RECENT -->
         <div class="sec" id="recentSec" style="display:none">
           <div class="sec-head"><h3><i class="fas fa-clock-rotate-left"></i> Terakhir Diputar</h3></div>
           <div id="recentCards" class="cards-row"></div>
         </div>
 
-        <div style="height:12px"></div>
+        <div style="height:16px"></div>
       </div>
     </div>
 
@@ -108,15 +100,15 @@
       <div class="topbar"><span class="topbar-title">Cari</span></div>
       <div class="search-bar">
         <div class="search-inner">
-          <i class="fas fa-search"></i>
-          <input id="searchInput" type="search" placeholder="Lagu, artis, album..." autocomplete="off" spellcheck="false"/>
-          <button id="searchClear" class="search-clear" onclick="clearSearch()" style="display:none"><i class="fas fa-times"></i></button>
+          <i class="fas fa-search si-icon"></i>
+          <input id="searchInput" type="search" placeholder="Lagu, artis, album..." autocomplete="off"/>
+          <button id="searchClear" class="s-clear" style="display:none" onclick="clearSearch()"><i class="fas fa-times-circle"></i></button>
         </div>
       </div>
       <div class="scroll-area" style="padding-top:0">
-        <div id="searchSuggestions" class="search-suggestions">
-          <div class="sugg-title">Cari Populer</div>
-          <div class="sugg-tags" id="suggTags"></div>
+        <div id="searchSugg" style="padding:16px 14px">
+          <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Artis Populer</div>
+          <div id="suggTags" class="sugg-wrap"></div>
         </div>
         <div id="searchResults" class="track-list" style="display:none"></div>
       </div>
@@ -126,15 +118,15 @@
     <div id="pg-favorit" class="page">
       <div class="topbar">
         <span class="topbar-title">Favorit</span>
-        <button class="icon-btn" onclick="shuffleFavs()" title="Putar acak favorit"><i class="fas fa-shuffle"></i></button>
+        <button class="icon-btn" onclick="shuffleFavs()"><i class="fas fa-shuffle"></i></button>
       </div>
       <div class="scroll-area" style="padding-top:0">
-        <div id="favHeader" style="display:none" class="list-header">
-          <button class="list-play-all" onclick="playAllFavs()"><i class="fas fa-play"></i> Putar Semua</button>
+        <div id="favHeader" class="list-header" style="display:none">
+          <button class="list-play-btn" onclick="playAllFavs()"><i class="fas fa-play"></i> Putar Semua</button>
           <span id="favCount" class="list-count"></span>
         </div>
         <div id="favResults" class="track-list">
-          <div class="empty"><i class="fas fa-heart"></i><p>Belum ada favorit</p><small>Ketuk ikon hati pada lagu</small></div>
+          <div class="empty"><i class="fas fa-heart"></i><p>Belum ada favorit</p><small>Ketuk ❤ pada lagu</small></div>
         </div>
       </div>
     </div>
@@ -143,28 +135,28 @@
     <div id="pg-unduhan" class="page">
       <div class="topbar">
         <span class="topbar-title">Unduhan</span>
-        <button class="icon-btn" onclick="clearDls()" title="Hapus semua"><i class="fas fa-trash"></i></button>
+        <button class="icon-btn" onclick="clearDls()"><i class="fas fa-trash-can"></i></button>
       </div>
       <div class="scroll-area" style="padding-top:0">
-        <div id="dlHeader" style="display:none" class="list-header">
-          <button class="list-play-all" onclick="playAllDls()"><i class="fas fa-play"></i> Putar Semua</button>
+        <div id="dlHeader" class="list-header" style="display:none">
+          <button class="list-play-btn" onclick="playAllDls()"><i class="fas fa-play"></i> Putar Semua</button>
           <span id="dlCount" class="list-count"></span>
         </div>
         <div id="dlResults" class="track-list">
-          <div class="empty"><i class="fas fa-download"></i><p>Belum ada unduhan</p><small>Unduh lagu untuk didengarkan offline</small></div>
+          <div class="empty"><i class="fas fa-download"></i><p>Belum ada unduhan</p><small>Unduh lagu dari menu ⋯</small></div>
         </div>
       </div>
     </div>
 
-  </div>
+  </div><!-- #pages -->
 
-  <!-- BOTTOM -->
+  <!-- BOTTOM: mini player + nav -->
   <div id="bottom-area">
-    <div id="miniPlayer" onclick="openFP()">
-      <div class="mp-left">
+    <div id="miniPlayer" style="display:none">
+      <div class="mp-left" onclick="openFP()">
         <div class="mp-img">
           <img id="mpImg" src="" alt="" onerror="this.style.display='none'"/>
-          <div class="mp-img-ic"><i class="fas fa-music"></i></div>
+          <div class="mp-fallback"><i class="fas fa-music"></i></div>
         </div>
         <div class="mp-info">
           <div id="mpTitle" class="mp-t">Belum ada lagu</div>
@@ -172,81 +164,88 @@
         </div>
       </div>
       <div class="mp-right">
-        <button class="mp-btn" id="mpFav" onclick="event.stopPropagation();toggleFav()"><i class="far fa-heart"></i></button>
-        <button class="mp-btn" id="mpPlay" onclick="event.stopPropagation();togglePlay()"><i class="fas fa-play"></i></button>
-        <button class="mp-btn" onclick="event.stopPropagation();nextTrack()"><i class="fas fa-forward-step"></i></button>
+        <button class="mp-btn" id="mpFav" onclick="toggleFav()"><i class="far fa-heart"></i></button>
+        <button class="mp-btn" id="mpPlay" onclick="togglePlay()"><i class="fas fa-play"></i></button>
+        <button class="mp-btn" onclick="nextTrack()"><i class="fas fa-forward-step"></i></button>
       </div>
       <div id="mpProg" class="mp-prog"></div>
     </div>
+
     <div id="bottomNav">
-      <button class="nav-btn active" id="nb-beranda" onclick="goTo('beranda')"><i class="fas fa-house"></i><span>Beranda</span></button>
-      <button class="nav-btn" id="nb-cari" onclick="goSearch()"><i class="fas fa-search"></i><span>Cari</span></button>
-      <button class="nav-btn" id="nb-favorit" onclick="goTo('favorit');renderFavs()"><i class="fas fa-heart"></i><span>Favorit</span></button>
-      <button class="nav-btn" id="nb-unduhan" onclick="goTo('unduhan');renderDls()"><i class="fas fa-download"></i><span>Unduhan</span></button>
+      <button class="nav-btn active" id="nb-beranda" onclick="goTo('beranda')">
+        <i class="fas fa-house"></i><span>Beranda</span>
+      </button>
+      <button class="nav-btn" id="nb-cari" onclick="goSearch()">
+        <i class="fas fa-search"></i><span>Cari</span>
+      </button>
+      <button class="nav-btn" id="nb-favorit" onclick="goTo('favorit');renderFavs()">
+        <i class="fas fa-heart"></i><span>Favorit</span>
+      </button>
+      <button class="nav-btn" id="nb-unduhan" onclick="goTo('unduhan');renderDls()">
+        <i class="fas fa-download"></i><span>Unduhan</span>
+      </button>
     </div>
   </div>
-</div>
+</div><!-- #app -->
 
-<!-- FULL PLAYER -->
+<!-- FULL PLAYER — di luar #app supaya tidak overlap -->
 <div id="fullPlayer">
   <div id="fp-bg"></div>
   <div id="fp-ov"></div>
   <div id="fp-body">
     <div class="fp-top">
-      <button class="fp-icon-btn" onclick="closeFP()"><i class="fas fa-chevron-down"></i></button>
-      <div class="fp-top-center">
-        <div class="fp-now-label">Sedang Diputar</div>
-        <div id="fpAlbum" class="fp-album-name"></div>
+      <button class="fp-ibtn" onclick="closeFP()"><i class="fas fa-chevron-down"></i></button>
+      <div class="fp-top-mid">
+        <div class="fp-now-txt">Sedang Diputar</div>
+        <div id="fpAlbum" class="fp-album"></div>
       </div>
-      <button class="fp-icon-btn" onclick="openMenu(null,true)"><i class="fas fa-ellipsis"></i></button>
+      <button class="fp-ibtn" onclick="openMenu(null)"><i class="fas fa-ellipsis"></i></button>
     </div>
 
-    <div class="fp-cover-wrap">
-      <div class="fp-cover" id="fpCoverWrap">
-        <img id="fpImg" src="" alt="cover" onerror="this.style.display='none'"/>
-        <div class="fp-cover-icon"><i class="fas fa-music"></i></div>
+    <div class="fp-cover-area">
+      <div class="fp-cover" id="fpCoverEl">
+        <img id="fpImg" src="" alt="" onerror="this.style.display='none'"/>
+        <div class="fp-cover-ic"><i class="fas fa-music"></i></div>
       </div>
     </div>
 
-    <div class="fp-info">
+    <div class="fp-info-row">
       <div class="fp-info-left">
         <div id="fpTitle" class="fp-title">Pilih lagu</div>
         <div id="fpArtist" class="fp-artist">-</div>
       </div>
-      <button id="fpFav" class="fp-fav-btn" onclick="toggleFav()"><i class="far fa-heart"></i></button>
+      <button id="fpFav" class="fp-fav" onclick="toggleFav()"><i class="far fa-heart"></i></button>
     </div>
 
-    <div class="fp-seek-wrap">
-      <input id="fpSeek" type="range" class="seekbar" min="0" max="100" value="0" oninput="seekTo(this.value)" onchange="seekTo(this.value)"/>
-      <div class="fp-times">
-        <span id="fpCur">0:00</span>
-        <span id="fpDur">0:00</span>
-      </div>
+    <div class="fp-seek-area">
+      <input id="fpSeek" type="range" class="seekbar" min="0" max="100" value="0" oninput="seekTo(this.value)"/>
+      <div class="fp-times"><span id="fpCur">0:00</span><span id="fpDur">0:00</span></div>
     </div>
 
-    <div class="fp-ctrls">
-      <button id="fpShuffle" class="fp-c" onclick="toggleShuffle()" title="Acak"><i class="fas fa-shuffle"></i></button>
-      <button class="fp-c" onclick="prevTrack()" title="Sebelumnya"><i class="fas fa-backward-step"></i></button>
-      <button id="fpPlayBtn" class="fp-play" onclick="togglePlay()"><i class="fas fa-play"></i></button>
-      <button class="fp-c" onclick="nextTrack()" title="Berikutnya"><i class="fas fa-forward-step"></i></button>
-      <button id="fpRepeat" class="fp-c" onclick="toggleRepeat()" title="Ulangi"><i class="fas fa-repeat"></i></button>
+    <div class="fp-ctrl-row">
+      <button id="fpShuffle" class="fp-c" onclick="toggleShuffle()"><i class="fas fa-shuffle"></i></button>
+      <button class="fp-c" onclick="prevTrack()"><i class="fas fa-backward-step"></i></button>
+      <button id="fpPlayBtn" class="fp-play-btn" onclick="togglePlay()"><i class="fas fa-play"></i></button>
+      <button class="fp-c" onclick="nextTrack()"><i class="fas fa-forward-step"></i></button>
+      <button id="fpRepeat" class="fp-c" onclick="toggleRepeat()"><i class="fas fa-repeat"></i></button>
     </div>
 
-    <div class="fp-actions">
-      <button class="fp-act" onclick="dlTrack()" title="Unduh"><i class="fas fa-download"></i></button>
-      <div class="fp-vol-wrap">
+    <div class="fp-act-row">
+      <button class="fp-act" onclick="dlTrack()"><i class="fas fa-download"></i></button>
+      <div class="fp-vol">
         <i class="fas fa-volume-low"></i>
         <input type="range" class="vol-sl" id="volSlider" min="0" max="1" step="0.02" value="1" oninput="setVol(this.value)"/>
         <i class="fas fa-volume-high"></i>
       </div>
-      <button class="fp-act" onclick="shareTrack()" title="Bagikan"><i class="fas fa-share-nodes"></i></button>
+      <button class="fp-act" onclick="shareTrack()"><i class="fas fa-share-nodes"></i></button>
     </div>
 
-    <div class="fp-queue-preview" onclick="openQueue()">
-      <div class="fp-queue-label"><i class="fas fa-list-music"></i> Antrian</div>
-      <div id="fpQueueNext" class="fp-queue-next">-</div>
-      <i class="fas fa-chevron-right" style="color:rgba(255,255,255,0.4);font-size:12px"></i>
-    </div>
+    <button class="fp-queue-btn" onclick="openQueue()">
+      <i class="fas fa-list-music"></i>
+      <span>Antrian</span>
+      <div id="fpQueueNext" class="fp-q-next">-</div>
+      <i class="fas fa-chevron-right" style="font-size:11px;opacity:0.4"></i>
+    </button>
   </div>
 </div>
 
@@ -255,16 +254,16 @@
   <div class="bsheet-back" onclick="closeQueue()"></div>
   <div class="bsheet-panel">
     <div class="bsheet-handle"></div>
-    <div class="bsheet-header">
-      <div class="bsheet-title">Antrian Putar</div>
-      <button class="bsheet-clear" onclick="clearQueue()">Hapus semua</button>
+    <div class="bsheet-hd">
+      <span class="bsheet-title">Antrian Putar</span>
+      <button class="bsheet-txt-btn" onclick="clearQueue()">Hapus semua</button>
     </div>
-    <div id="queueNowPlaying" class="queue-now"></div>
+    <div id="qNowPlaying"></div>
     <div id="queueList" class="track-list"></div>
   </div>
 </div>
 
-<!-- TRACK MENU -->
+<!-- MENU SHEET -->
 <div id="menuSheet" class="bsheet">
   <div class="bsheet-back" onclick="closeMenu()"></div>
   <div class="bsheet-panel">
@@ -278,14 +277,14 @@
   <div class="bsheet-back" onclick="closeTimer()"></div>
   <div class="bsheet-panel">
     <div class="bsheet-handle"></div>
-    <div class="bsheet-title">Timer Tidur</div>
+    <div class="bsheet-title" style="margin-bottom:16px">Timer Tidur</div>
     <div class="timer-grid">
       <button class="timer-btn" onclick="setSleepTimer(15)">15 menit</button>
       <button class="timer-btn" onclick="setSleepTimer(30)">30 menit</button>
       <button class="timer-btn" onclick="setSleepTimer(45)">45 menit</button>
       <button class="timer-btn" onclick="setSleepTimer(60)">1 jam</button>
-      <button class="timer-btn" onclick="setSleepTimer(90)">1.5 jam</button>
-      <button class="timer-btn timer-cancel" onclick="cancelSleepTimer()">Batalkan</button>
+      <button class="timer-btn" onclick="setSleepTimer(90)">1,5 jam</button>
+      <button class="timer-btn timer-off" onclick="cancelSleepTimer()">Batalkan Timer</button>
     </div>
     <div id="timerStatus" class="timer-status"></div>
   </div>

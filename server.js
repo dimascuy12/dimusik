@@ -37,30 +37,19 @@ function detectYtdlp() {
   for (const p of paths) {
     try {
       execSync(`"${p}" --version`, { stdio: 'pipe', timeout: 10000 });
-      console.log(`✅ yt-dlp binary: ${p}`);
       return p;
     } catch (e) { continue; }
   }
   try {
-    const v = execSync('python3 -m yt_dlp --version', { stdio: 'pipe', timeout: 10000 }).toString().trim();
-    console.log(`✅ yt-dlp via python3 module: ${v}`);
+    execSync('python3 -m yt_dlp --version', { stdio: 'pipe', timeout: 10000 });
     return 'python3::module';
-  } catch (e) {}
-  try {
-    execSync('python -m yt_dlp --version', { stdio: 'pipe', timeout: 10000 });
-    return 'python::module';
   } catch (e) {}
   return null;
 }
 
 tryInstall();
 YTDLP_CMD = detectYtdlp();
-
-if (!YTDLP_CMD) {
-  console.warn('⚠️  yt-dlp tidak ditemukan!');
-} else {
-  console.log(`📦 yt-dlp: ${YTDLP_CMD}`);
-}
+console.log(`📦 yt-dlp: ${YTDLP_CMD || 'NOT FOUND'}`);
 
 function spawnYtdlp(args) {
   if (!YTDLP_CMD) throw new Error('yt-dlp tidak tersedia');
@@ -99,32 +88,37 @@ app.get('/api/test', (req, res) => {
 app.get('/api/search', async (req, res) => {
   try {
     const { q, limit = 20 } = req.query;
-    if (!q) return res.status(400).json({ error: 'Query wajib diisi' });
+    if (!q) return res.status(400).json({ error: 'Query wajib' });
     const axios = require('axios');
-    const resp = await axios.get(`https://api.deezer.com/search?q=${encodeURIComponent(q)}&limit=${limit}`);
+    const resp = await axios.get(`https://api.deezer.com/search?q=${encodeURIComponent(q)}&limit=${limit}`, { timeout: 8000 });
     res.json(resp.data);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.get('/api/chart', async (req, res) => {
   try {
-    const { limit = 50 } = req.query;
+    const { limit = 20 } = req.query;
     const axios = require('axios');
-    const resp = await axios.get(`https://api.deezer.com/chart/0/tracks?limit=${limit}`);
+    const resp = await axios.get(`https://api.deezer.com/chart/0/tracks?limit=${limit}`, { timeout: 8000 });
     res.json(resp.data);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// STREAM - pakai SoundCloud sebagai sumber utama, YouTube sebagai fallback
 app.get('/api/stream', (req, res) => {
   const { title, artist } = req.query;
-  if (!title) return res.status(400).json({ error: 'title wajib diisi' });
+  if (!title) return res.status(400).json({ error: 'title wajib' });
   if (!YTDLP_CMD) return res.status(503).json({ error: 'yt-dlp tidak tersedia' });
 
-  const query = `ytsearch1:${title}${artist ? ' ' + artist : ''} audio`;
+  // Coba SoundCloud dulu, lalu YouTube Music, lalu YouTube
+  const queries = [
+    `scsearch1:${title} ${artist || ''} audio`,
+    `https://music.youtube.com/search?q=${encodeURIComponent(title + ' ' + (artist || ''))}`,
+    `ytsearch1:${title} ${artist || ''} official audio`,
+  ];
+
+  const query = `scsearch1:${title} ${artist ? artist + ' ' : ''}`;
+
   const args = [
     '--no-playlist',
     '--format', 'bestaudio/best',
@@ -134,8 +128,11 @@ app.get('/api/stream', (req, res) => {
     '-o', '-',
     '--no-part',
     '--no-mtime',
-    '--geo-bypass',
     '--quiet',
+    '--no-warnings',
+    '--socket-timeout', '30',
+    '--retries', '3',
+    '--source-address', '0.0.0.0',
     query
   ];
 
@@ -148,26 +145,79 @@ app.get('/api/stream', (req, res) => {
   try { proc = spawnYtdlp(args); }
   catch (e) { return res.status(503).json({ error: e.message }); }
 
-  proc.stdout.pipe(res);
-  proc.stderr.on('data', (d) => {
-    const msg = d.toString();
-    if (!msg.includes('[download]')) console.error('yt-dlp:', msg.trim());
+  let hasData = false;
+
+  proc.stdout.on('data', chunk => {
+    if (!hasData) { hasData = true; }
+    if (!res.writableEnded) res.write(chunk);
   });
-  proc.on('close', () => { if (!res.writableEnded) res.end(); });
-  proc.on('error', (err) => {
+
+  proc.stderr.on('data', d => {
+    const msg = d.toString();
+    if (!msg.includes('[download]') && !msg.includes('WARNING')) {
+      console.error('yt-dlp err:', msg.trim().substring(0, 200));
+    }
+  });
+
+  proc.on('close', code => {
+    if (!hasData && code !== 0) {
+      // SoundCloud gagal, coba YouTube dengan flag anti-bot
+      console.log('SoundCloud gagal, mencoba YouTube...');
+      tryYoutube(title, artist, res);
+    } else {
+      if (!res.writableEnded) res.end();
+    }
+  });
+
+  proc.on('error', err => {
+    console.error('Spawn error:', err);
     if (!res.headersSent) res.status(500).json({ error: err.message });
     else if (!res.writableEnded) res.end();
   });
+
   req.on('close', () => { if (proc && !proc.killed) proc.kill('SIGKILL'); });
 });
 
+function tryYoutube(title, artist, res) {
+  const query = `ytsearch1:${title} ${artist || ''} audio`;
+  const args = [
+    '--no-playlist',
+    '--format', 'bestaudio[ext=m4a]/bestaudio/best',
+    '--extract-audio',
+    '--audio-format', 'mp3',
+    '--audio-quality', '5',
+    '-o', '-',
+    '--no-part',
+    '--quiet',
+    '--no-warnings',
+    '--extractor-args', 'youtube:player_client=android',
+    '--socket-timeout', '30',
+    '--retries', '2',
+    query
+  ];
+
+  let proc2;
+  try { proc2 = spawnYtdlp(args); }
+  catch (e) { if (!res.writableEnded) res.end(); return; }
+
+  proc2.stdout.pipe(res);
+  proc2.stderr.on('data', d => {
+    const msg = d.toString();
+    if (!msg.includes('[download]')) console.error('YT fallback:', msg.trim().substring(0, 150));
+  });
+  proc2.on('close', () => { if (!res.writableEnded) res.end(); });
+  proc2.on('error', () => { if (!res.writableEnded) res.end(); });
+}
+
+// DOWNLOAD
 app.get('/api/download', (req, res) => {
   const { title, artist } = req.query;
-  if (!title) return res.status(400).json({ error: 'title wajib diisi' });
+  if (!title) return res.status(400).json({ error: 'title wajib' });
   if (!YTDLP_CMD) return res.status(503).json({ error: 'yt-dlp tidak tersedia' });
 
-  const query = `ytsearch1:${title}${artist ? ' ' + artist : ''} audio`;
+  const query = `scsearch1:${title} ${artist || ''}`;
   const filename = `${artist ? artist + ' - ' : ''}${title}.mp3`.replace(/[/\\?%*:|"<>]/g, '_');
+
   const args = [
     '--no-playlist',
     '--format', 'bestaudio/best',
@@ -176,9 +226,8 @@ app.get('/api/download', (req, res) => {
     '--audio-quality', '3',
     '-o', '-',
     '--no-part',
-    '--no-mtime',
-    '--geo-bypass',
     '--quiet',
+    '--no-warnings',
     query
   ];
 
@@ -190,15 +239,9 @@ app.get('/api/download', (req, res) => {
   catch (e) { return res.status(503).json({ error: e.message }); }
 
   proc.stdout.pipe(res);
-  proc.stderr.on('data', (d) => {
-    const msg = d.toString();
-    if (!msg.includes('[download]')) console.error('yt-dlp:', msg.trim());
-  });
+  proc.stderr.on('data', d => { const m = d.toString(); if (!m.includes('[download]')) console.error('dl:', m.trim()); });
   proc.on('close', () => { if (!res.writableEnded) res.end(); });
-  proc.on('error', (err) => {
-    if (!res.headersSent) res.status(500).json({ error: err.message });
-    else if (!res.writableEnded) res.end();
-  });
+  proc.on('error', err => { if (!res.headersSent) res.status(500).json({ error: err.message }); else if (!res.writableEnded) res.end(); });
   req.on('close', () => { if (proc && !proc.killed) proc.kill('SIGKILL'); });
 });
 
